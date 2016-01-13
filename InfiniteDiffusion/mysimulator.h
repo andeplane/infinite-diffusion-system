@@ -10,7 +10,7 @@ class MyWorker : public SimulatorWorker
 {
     Q_OBJECT
 private:
-    System m_system;
+    System *m_system = nullptr;
 
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator);
@@ -23,19 +23,19 @@ public:
 class MySimulator : public Simulator
 {
     Q_OBJECT
-    Q_PROPERTY(Geometry* diffusionGeometry READ diffusionGeometry WRITE setDiffusionGeometry NOTIFY diffusionGeometryChanged)
+    Q_PROPERTY(System* system READ system WRITE setSystem NOTIFY systemChanged)
 private:
-    Geometry* m_diffusionGeometry = nullptr;
+    System* m_system = nullptr;
 
 public:
     MySimulator();
-    Geometry* diffusionGeometry() const;
+    System* system() const;
 
 public slots:
-    void setDiffusionGeometry(Geometry* diffusionGeometry);
+    void setSystem(System* system);
 
 signals:
-    void diffusionGeometryChanged(Geometry* diffusionGeometry);
+    void systemChanged(System* system);
 
 protected:
     virtual SimulatorWorker *createWorker();

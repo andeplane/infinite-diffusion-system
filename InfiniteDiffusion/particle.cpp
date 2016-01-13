@@ -15,6 +15,10 @@ void Particle::setPosition(const QVector3D &position)
     m_position = position;
 }
 
+QVector3D &Particle::position()
+{
+    return m_position;
+}
 
 bool Particle::active() const
 {
@@ -24,4 +28,5 @@ bool Particle::active() const
 void Particle::setActive(bool active) {
     m_active = active;
 }
+
 

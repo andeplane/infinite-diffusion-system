@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     particle.cpp \
     geometry/perlingeometry.cpp \
     geometry/geometry.cpp \
-    geometry/cylindergeometry.cpp
+    geometry/cylindergeometry.cpp \
+    random.cpp
 
 RESOURCES += qml.qrc
 
@@ -27,4 +28,5 @@ HEADERS += \
     geometry/perlingeometry.h \
     geometry/geometry.h \
     geometry/cylindergeometry.h \
-    geometry/geometries.h
+    geometry/geometries.h \
+    random.h

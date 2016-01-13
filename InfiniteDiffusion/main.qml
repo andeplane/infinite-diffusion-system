@@ -10,8 +10,12 @@ Window {
     height: 768
     MySimulator {
         id: simulator
-        diffusionGeometry: CylinderGeometry {
-            radius: 1.0
+        system: System {
+            properties: SystemProperties {
+                geometry: CylinderGeometry {
+                    radius: 1.0
+                }
+            }
         }
     }
 
@@ -27,6 +31,10 @@ Window {
             id: navigator
             anchors.fill: parent
             camera: camera
+        }
+
+        Points {
+            id: points
         }
     }
 }
