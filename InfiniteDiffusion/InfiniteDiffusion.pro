@@ -4,7 +4,10 @@ CONFIG += c++11
 QT += qml quick widgets opengl openglextensions
 
 SOURCES += main.cpp \
-    mysimulator.cpp
+    mysimulator.cpp \
+    system.cpp \
+    particle.cpp \
+    perlingeometry.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,4 +19,7 @@ include(deployment.pri)
 include(../SimVis/library_deployment.pri)
 
 HEADERS += \
-    mysimulator.h
+    mysimulator.h \
+    system.h \
+    particle.h \
+    perlingeometry.h
