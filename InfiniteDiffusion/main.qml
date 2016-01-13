@@ -10,7 +10,7 @@ Window {
     height: 768
     MySimulator {
         id: simulator
-        geometry: CylinderGeometry {
+        diffusionGeometry: CylinderGeometry {
             radius: 1.0
         }
     }

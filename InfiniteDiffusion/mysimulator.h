@@ -1,6 +1,7 @@
 #pragma once
 #include <SimVis/Simulator>
 #include "system.h"
+#include "geometry/geometries.h"
 
 #include <QVector>
 #include <QVector3D>
@@ -22,12 +23,20 @@ public:
 class MySimulator : public Simulator
 {
     Q_OBJECT
+    Q_PROPERTY(Geometry* diffusionGeometry READ diffusionGeometry WRITE setDiffusionGeometry NOTIFY diffusionGeometryChanged)
 private:
+    Geometry* m_diffusionGeometry = nullptr;
 
 public:
     MySimulator();
+    Geometry* diffusionGeometry() const;
 
-    // Simulator interface
+public slots:
+    void setDiffusionGeometry(Geometry* diffusionGeometry);
+
+signals:
+    void diffusionGeometryChanged(Geometry* diffusionGeometry);
+
 protected:
     virtual SimulatorWorker *createWorker();
 };

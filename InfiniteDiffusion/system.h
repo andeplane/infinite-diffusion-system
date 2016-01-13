@@ -23,6 +23,7 @@ public:
 
 public slots:
     void setGeometry(Geometry* geometry);
+
 signals:
     void geometryChanged(Geometry* geometry);
 };
