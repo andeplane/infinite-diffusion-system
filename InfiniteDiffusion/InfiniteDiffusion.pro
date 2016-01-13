@@ -7,7 +7,9 @@ SOURCES += main.cpp \
     mysimulator.cpp \
     system.cpp \
     particle.cpp \
-    perlingeometry.cpp
+    geometry/perlingeometry.cpp \
+    geometry/geometry.cpp \
+    geometry/cylindergeometry.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,4 +24,7 @@ HEADERS += \
     mysimulator.h \
     system.h \
     particle.h \
-    perlingeometry.h
+    geometry/perlingeometry.h \
+    geometry/geometry.h \
+    geometry/cylindergeometry.h \
+    geometry/geometries.h

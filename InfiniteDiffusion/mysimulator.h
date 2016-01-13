@@ -1,7 +1,6 @@
-#ifndef MYSIMULATOR_H
-#define MYSIMULATOR_H
+#pragma once
 #include <SimVis/Simulator>
-#include <SimVis/TriangleCollection>
+#include "system.h"
 
 #include <QVector>
 #include <QVector3D>
@@ -10,11 +9,12 @@ class MyWorker : public SimulatorWorker
 {
     Q_OBJECT
 private:
+    System m_system;
+
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator);
     virtual void synchronizeRenderer(Renderable *renderableObject);
     virtual void work();
-    QVector<SimVis::TriangleCollectionVBOData> m_vertices;
 public:
     MyWorker();
 };
@@ -31,5 +31,3 @@ public:
 protected:
     virtual SimulatorWorker *createWorker();
 };
-
-#endif // MYSIMULATOR_H

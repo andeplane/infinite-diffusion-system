@@ -1,8 +1,6 @@
 #pragma once
 #include <QVector3D>
 
-
-
 class Particle
 {
 private:
