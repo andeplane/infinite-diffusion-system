@@ -12,6 +12,12 @@ SOURCES += main.cpp \
     geometry/cylindergeometry.cpp \
     random.cpp
 
+unix|win32: LIBS += -L$$PWD/../../build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release/ -lGeometryLibrary.1.0.0
+
+INCLUDEPATH += $$PWD/../../GeometryLibrary
+DEPENDPATH += $$PWD/../../GeometryLibrary
+
+
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model

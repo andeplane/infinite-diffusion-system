@@ -12,14 +12,16 @@ Window {
         id: simulator
         system: System {
             Component.onCompleted: {
-                createParticles(10000,-100,100)
+                createParticles(100000,-1000,1000)
             }
 
             properties: SystemProperties {
-                geometry: CylinderGeometry {
+/*                geometry: CylinderGeometry {
                     radius: 100.0
+                }*/
+                geometry: PerlinGeometry {
                 }
-                stepLength: 1.0
+                stepLength: 100.0
             }
         }
     }
@@ -29,7 +31,8 @@ Window {
         simulator: simulator
         camera: Camera {
             id: camera
-            position: Qt.vector3d(0,0,-500)
+            position: Qt.vector3d(0,0,-5000)
+            farPlane: 10000
         }
         backgroundColor: "black"
 

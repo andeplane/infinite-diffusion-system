@@ -16,6 +16,7 @@ private:
     bool m_abs = false;
     bool m_invert = false;
 
+
 public:
     int octaves() const;
     float persistence() const;
@@ -45,8 +46,13 @@ class PerlinGeometry : public Geometry
 private:
 
     PerlinProperties* m_properties = nullptr;
+    NoiseParameters m_noiseParameters;
+    GeometryLibrary m_geometry;
+    bool m_initialized = false;
+    void Initialize();
 
 public:
+
     PerlinGeometry();
     bool pointIsVoid(const float &x, const float &y, const float &z);
     PerlinProperties* properties() const

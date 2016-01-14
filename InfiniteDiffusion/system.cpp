@@ -11,7 +11,7 @@ void System::tick()
     if(!m_properties->geometry()) return;
     for(Particle &particle : m_particles) {
         int moveDimension = m_random.nextInt(0,2);
-        double step = 1.0 - 2.0*m_random.nextBool();
+        double step = (1.0 - 2.0*m_random.nextBool())*m_properties->stepLength();
         particle[moveDimension] += step;
         if(!m_properties->m_geometry->pointIsVoid(particle.position())) {
             // Reject. We collided with a wall
