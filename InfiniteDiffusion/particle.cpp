@@ -1,5 +1,15 @@
 #include "particle.h"
 
+QVector3D Particle::originalPosition() const
+{
+    return m_originalPosition;
+}
+
+void Particle::setOriginalPosition(const QVector3D &originalPosition)
+{
+    m_originalPosition = originalPosition;
+}
+
 Particle::Particle()
 {
 

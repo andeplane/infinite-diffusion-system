@@ -4,6 +4,7 @@
 class Particle
 {
 private:
+    QVector3D m_originalPosition;
     QVector3D m_position;
     bool m_active;
 
@@ -17,4 +18,6 @@ public:
     QVector3D &position();
     QVector3D position() const;
     void setPosition(const QVector3D &position);
+    QVector3D originalPosition() const;
+    void setOriginalPosition(const QVector3D &originalPosition);
 };

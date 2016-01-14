@@ -11,6 +11,10 @@ Window {
     MySimulator {
         id: simulator
         system: System {
+            Component.onCompleted: {
+                createParticles(100000)
+            }
+
             properties: SystemProperties {
                 geometry: CylinderGeometry {
                     radius: 1.0
@@ -35,6 +39,7 @@ Window {
 
         Points {
             id: points
+            pointSize: 2.0
         }
     }
 }

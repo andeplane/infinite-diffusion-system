@@ -22,5 +22,5 @@ public:
     int nextInt(const int min, const int max);
     double nextDouble();
     double nextGauss(double mean = 0.0, double standardDeviation = 1.0);
-    QVector3D nextQVector3D();
+    QVector3D nextQVector3D(float from, float to);
 };

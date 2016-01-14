@@ -21,11 +21,12 @@ double Random::nextGauss(double mean, double standardDeviation) {
                  * cos( 6.283185307 * nextDouble() ) ) * standardDeviation;
 }
 
-QVector3D Random::nextQVector3D()
+QVector3D Random::nextQVector3D(float from, float to)
 {
-    double x = nextDouble();
-    double y = nextDouble();
-    double z = nextDouble();
+    float delta = to - from;
+    float x = from + delta*nextDouble();
+    float y = from + delta*nextDouble();
+    float z = from + delta*nextDouble();
     return QVector3D(x,y,z);
 }
 

@@ -2,7 +2,7 @@
 
 System::System()
 {
-    m_particles.resize(1000);
+
 }
 
 void System::tick()
@@ -54,13 +54,14 @@ float SystemProperties::stepLength() const
     return m_stepLength;
 }
 
-void System::distributeParticles()
+void System::createParticles(int numberOfParticles)
 {
     if(!m_properties) return;
+    m_particles.resize(numberOfParticles);
     for(Particle &particle : m_particles) {
         bool isInVoid = false;
         while(!isInVoid) {
-            particle.setPosition(m_random.nextQVector3D());
+            particle.setPosition(m_random.nextQVector3D(-1,1));
             isInVoid = m_properties->m_geometry->pointIsVoid(particle.position());
         }
     }
