@@ -12,6 +12,26 @@ System *MySimulator::system() const
     return m_system;
 }
 
+LineGraphDataSource *MySimulator::lineGraphDataSource() const
+{
+    return m_lineGraphDataSource;
+}
+
+float MySimulator::diffusionMean() const
+{
+    return m_diffusionMean;
+}
+
+float MySimulator::diffusionStandardDeviation() const
+{
+    return m_diffusionStandardDeviation;
+}
+
+int MySimulator::time() const
+{
+    return m_time;
+}
+
 void MySimulator::setSystem(System *system)
 {
     if (m_system == system)
@@ -19,6 +39,42 @@ void MySimulator::setSystem(System *system)
 
     m_system = system;
     emit systemChanged(system);
+}
+
+void MySimulator::setLineGraphDataSource(LineGraphDataSource *lineGraphDataSource)
+{
+    if (m_lineGraphDataSource == lineGraphDataSource)
+        return;
+
+    m_lineGraphDataSource = lineGraphDataSource;
+    emit lineGraphDataSourceChanged(lineGraphDataSource);
+}
+
+void MySimulator::setDiffusionMean(float diffusionMean)
+{
+    if (m_diffusionMean == diffusionMean)
+        return;
+
+    m_diffusionMean = diffusionMean;
+    emit diffusionMeanChanged(diffusionMean);
+}
+
+void MySimulator::setDiffusionStandardDeviation(float diffusionStandardDeviation)
+{
+    if (m_diffusionStandardDeviation == diffusionStandardDeviation)
+        return;
+
+    m_diffusionStandardDeviation = diffusionStandardDeviation;
+    emit diffusionStandardDeviationChanged(diffusionStandardDeviation);
+}
+
+void MySimulator::setTime(int time)
+{
+    if (m_time == time)
+        return;
+
+    m_time = time;
+    emit timeChanged(time);
 }
 
 SimulatorWorker *MySimulator::createWorker()
@@ -38,6 +94,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         // Synchronize data between QML thread and computing thread (MySimulator is on QML, MyWorker is computing thread).
         // This is for instance data from user through GUI (sliders, buttons, text fields etc)
         m_system = mySimulator->system();
+        if(mySimulator->lineGraphDataSource()) {
+            mySimulator->lineGraphDataSource()->setPoints(m_histogram);
+        }
+        mySimulator->setDiffusionMean(m_diffusionMean);
+        mySimulator->setDiffusionStandardDeviation(m_diffusionStandardDeviation);
+        mySimulator->setTime(m_time);
     }
 }
 
@@ -50,8 +112,47 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     }
 }
 
+void MyWorker::createHistogram(int bins)
+{
+    m_histogram.clear();;
+    float minValue = 1e10;
+    float maxValue = 0;
+    QVector<float> diffusionCoefficients;
+    diffusionCoefficients.reserve(m_system->particles().size());
+
+    for(Particle &particle : m_system->particles()) {
+        float deltaR2 = (particle.position() - particle.originalPosition()).lengthSquared();
+        float deltaR2OverT = deltaR2 / (6*m_time);
+        minValue = std::min(minValue, deltaR2OverT);
+        maxValue = std::max(maxValue, deltaR2OverT);
+        diffusionCoefficients.push_back(deltaR2OverT);
+    }
+    gsl_histogram *hist = gsl_histogram_alloc (bins);
+    gsl_histogram_set_ranges_uniform (hist, minValue, maxValue);
+    for(const float &value : diffusionCoefficients) {
+        gsl_histogram_increment (hist, value);
+    }
+
+    m_histogram.resize(bins);
+    for(int i=0; i<bins; i++) {
+        double upper, lower;
+        gsl_histogram_get_range(hist, i, &lower, &upper);
+        float middle = 0.5*(upper+lower);
+        m_histogram[i].setX(middle);
+        m_histogram[i].setY(gsl_histogram_get(hist,i));
+    }
+    m_diffusionMean = gsl_histogram_mean(hist);
+    m_diffusionStandardDeviation = gsl_histogram_sigma(hist);
+
+    gsl_histogram_free (hist);
+    diffusionCoefficients.clear();
+}
+
 void MyWorker::work()
 {
     if(!m_system) return;
+    m_time++;
     m_system->tick();
+    createHistogram(100);
+
 }

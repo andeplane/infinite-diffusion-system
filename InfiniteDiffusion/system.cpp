@@ -35,6 +35,7 @@ QVector<QVector3D> System::particlePositions()
     return positions;
 }
 
+
 void System::setProperties(SystemProperties *properties)
 {
     if (m_properties == properties)
@@ -63,6 +64,7 @@ void System::createParticles(int numberOfParticles, float from, float to)
         bool isInVoid = false;
         while(!isInVoid) {
             particle.setPosition(m_random.nextQVector3D(from,to));
+            particle.setOriginalPosition(particle.position());
             isInVoid = m_properties->m_geometry->pointIsVoid(particle.position());
         }
     }
