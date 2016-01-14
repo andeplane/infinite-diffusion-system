@@ -12,13 +12,14 @@ Window {
         id: simulator
         system: System {
             Component.onCompleted: {
-                createParticles(100000)
+                createParticles(10000,-100,100)
             }
 
             properties: SystemProperties {
                 geometry: CylinderGeometry {
-                    radius: 1.0
+                    radius: 100.0
                 }
+                stepLength: 1.0
             }
         }
     }
@@ -28,6 +29,7 @@ Window {
         simulator: simulator
         camera: Camera {
             id: camera
+            position: Qt.vector3d(0,0,-500)
         }
         backgroundColor: "black"
 

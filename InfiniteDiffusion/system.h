@@ -42,7 +42,7 @@ private:
 public:
     System();
     void tick();
-    Q_INVOKABLE void createParticles(int numberOfParticles);
+    Q_INVOKABLE void createParticles(int numberOfParticles, float from, float to);
 
     // Getters and setters
     QVector<Particle> &particles() { return m_particles; }

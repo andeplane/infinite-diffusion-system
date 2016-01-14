@@ -1,4 +1,5 @@
 #include "system.h"
+#include <QDebug>
 
 System::System()
 {
@@ -17,7 +18,6 @@ void System::tick()
             particle[moveDimension] -= step;
         }
     }
-
 }
 
 SystemProperties *System::properties() const
@@ -54,17 +54,19 @@ float SystemProperties::stepLength() const
     return m_stepLength;
 }
 
-void System::createParticles(int numberOfParticles)
+void System::createParticles(int numberOfParticles, float from, float to)
 {
     if(!m_properties) return;
     m_particles.resize(numberOfParticles);
+    qDebug() << "Creating particles...";
     for(Particle &particle : m_particles) {
         bool isInVoid = false;
         while(!isInVoid) {
-            particle.setPosition(m_random.nextQVector3D(-1,1));
+            particle.setPosition(m_random.nextQVector3D(from,to));
             isInVoid = m_properties->m_geometry->pointIsVoid(particle.position());
         }
     }
+    qDebug() << "Done.";
 }
 
 void SystemProperties::setGeometry(Geometry *geometry)

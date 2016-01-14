@@ -53,4 +53,5 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 void MyWorker::work()
 {
     if(!m_system) return;
+    m_system->tick();
 }
