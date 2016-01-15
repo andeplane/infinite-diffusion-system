@@ -32,6 +32,11 @@ int MySimulator::time() const
     return m_time;
 }
 
+float MySimulator::timePerTimestep() const
+{
+    return m_timePerTimestep;
+}
+
 void MySimulator::setSystem(System *system)
 {
     if (m_system == system)
@@ -77,6 +82,15 @@ void MySimulator::setTime(int time)
     emit timeChanged(time);
 }
 
+void MySimulator::setTimePerTimestep(float timePerTimestep)
+{
+    if (m_timePerTimestep == timePerTimestep)
+        return;
+
+    m_timePerTimestep = timePerTimestep;
+    emit timePerTimestepChanged(timePerTimestep);
+}
+
 SimulatorWorker *MySimulator::createWorker()
 {
     return new MyWorker();
@@ -100,6 +114,9 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->setDiffusionMean(m_diffusionMean);
         mySimulator->setDiffusionStandardDeviation(m_diffusionStandardDeviation);
         mySimulator->setTime(m_time);
+        if(m_time>0) {
+            mySimulator->setTimePerTimestep(m_totalWorkTime / m_time);
+        }
     }
 }
 
@@ -152,7 +169,9 @@ void MyWorker::work()
 {
     if(!m_system) return;
     m_time++;
+    m_elapsedTimer.restart();
     m_system->tick();
+    m_totalWorkTime += m_elapsedTimer.elapsed();
     createHistogram(100);
 
 }
