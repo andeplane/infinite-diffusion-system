@@ -12,7 +12,7 @@ void PerlinGeometry::Initialize()
 
     //[ (Octaves, 2.67932) (Scale, 0.592571) (Persistence, 0.650796) (Threshold, 0.189121) (Inverted, 0.633623) (Seed, 123) (Absolute, 1)
     m_noiseParameters = NoiseParameters(2.6, 0.002, 0.6, 0.2, 1, 123, 1);
-    m_geometry.Initialize(GeometryLibrary::Model::Regular, Noise::Simplex, &m_noiseParameters);
+    m_geometry.initialize(GeometryLibrary::GeometryModel::Regular, Noise::Simplex, &m_noiseParameters);
     m_initialized = true;
 }
 
@@ -20,7 +20,7 @@ bool PerlinGeometry::pointIsVoid(const float &x, const float &y, const float &z)
 {
     if (!m_initialized)
         Initialize();
-    return !m_geometry.IsInVoid(QVector3D(x,y,z));
+    return !m_geometry.isInVoid(QVector3D(x,y,z));
 
 }
 
