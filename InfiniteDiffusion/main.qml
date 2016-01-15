@@ -18,14 +18,13 @@ Window {
             }
 
             properties: SystemProperties {
-//                geometry: CylinderGeometry {
-//                    radius: 100.0
-//                }
-                geometry: PerlinGeometry { }
-//                geometry: VoidGeometry { }
+                geometry: CylinderGeometry { radius: 100.0 }
+                // geometry: PerlinGeometry { }
+                //geometry: VoidGeometry { }
                 stepLength: 10.0
             }
         }
+
         lineGraphDataSource: LineGraphDataSource {
 
         }
@@ -36,7 +35,7 @@ Window {
         simulator: simulator
         camera: Camera {
             id: camera
-            position: Qt.vector3d(0,0,-20000)
+            position: Qt.vector3d(0,0,-5000)
             farPlane: 1000000
         }
         backgroundColor: "black"
@@ -86,8 +85,12 @@ Window {
         Row {
             x: 6
             y: 20
+            spacing: 10
             Label {
                 text: "Diffusion sigma: "+simulator.diffusionStandardDeviation.toFixed(3)
+            }
+            Label {
+                text: "Time per timestep [ms]: "+simulator.timePerTimestep.toFixed(3)
             }
 
         }
