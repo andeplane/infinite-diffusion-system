@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QVector3D>
-#include <noiseparameters.h>
+#include <models/noiseparameters.h>
 #include <geometrylibrary.h>
 
 class Geometry : public QObject

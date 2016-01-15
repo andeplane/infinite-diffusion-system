@@ -14,7 +14,7 @@ Window {
         id: simulator
         system: System {
             Component.onCompleted: {
-                createParticles(10000,-100,100)
+                createParticles(100000,-100,100)
             }
 
             properties: SystemProperties {
