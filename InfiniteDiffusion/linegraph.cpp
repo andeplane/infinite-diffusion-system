@@ -4,8 +4,8 @@
 
 void LineGraphDataSource::cleanupMemory() {
     m_points.erase(m_points.begin(), m_points.begin()+m_firstIndex-1);
-        m_firstIndex = 0;
-        m_numberOfPoints = m_points.size();
+    m_firstIndex = 0;
+    m_numberOfPoints = m_points.size();
 }
 
 void LineGraphDataSource::addPoint(float x, float y)
@@ -144,6 +144,48 @@ Qt::PenStyle LineGraph::style() const
 int LineGraph::width() const
 {
     return m_width;
+}
+
+LineGraph::save(QString filename)
+{
+    if(!m_dataSource) return;
+    QFile file(QUrl(filename).toLocalFile());
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Could not open file "+filename;
+        return;
+    }
+
+    QTextStream out(&file);
+    m_dataSource->iterate([&](int i, QPointF point) {
+        out << point.x() << " " << point.y() << "\n";
+    });
+    file.close();
+}
+
+LineGraph::load(QString filename)
+{
+    if(!m_dataSource) return;
+    QFile file(QUrl(filename).toLocalFile());
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Could not open file "+filename;
+        return;
+    }
+
+    m_dataSource->clear();
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList words = line.split(" ");
+        if(words.length() != 2) continue;
+
+        bool castOk;
+        float pointX = QString(words[0]).toFloat(&castOk);
+        if(!castOk) continue;
+        float pointY = QString(words[1]).toFloat(&castOk);
+        if(!castOk) continue;
+        m_dataSource->addPoint(pointX,pointY);
+    }
+    file.close();
 }
 
 void LineGraph::setDataSource(LineGraphDataSource *dataSource)

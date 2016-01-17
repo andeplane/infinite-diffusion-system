@@ -24,6 +24,7 @@ private:
     virtual void synchronizeRenderer(Renderable *renderableObject);
     virtual void work();
     void createHistogram(int bins);
+    void normalizeHistogram();
 public:
     MyWorker();
 };

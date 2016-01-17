@@ -2,6 +2,9 @@
 #include "graph.h"
 #include <cmath>
 #include <QDebug>
+#include <QSvgGenerator>
+#include <QFileDialog>
+
 Figure::Figure(QQuickItem *parent) : QQuickPaintedItem(parent)
 {
     connect(this, SIGNAL(xMinChanged(double)), this, SLOT(update()));
@@ -16,10 +19,16 @@ Figure::Figure(QQuickItem *parent) : QQuickPaintedItem(parent)
 
 void Figure::paint(QPainter *painter)
 {
+    if(m_freeze) {
+        painter->drawImage(boundingRect(), m_image);
+        return;
+    }
     if(m_fitData) {
         QList<Graph*> graphs = findChildren<Graph*>();
         for(Graph *graph : graphs) {
-            graph->bounds(m_xMin, m_xMax, m_yMin, m_yMax);
+            if(graph->isVisible()) {
+                graph->bounds(m_xMin, m_xMax, m_yMin, m_yMax);
+            }
         }
     }
     // Calculate how much space we need for titles etc
@@ -120,7 +129,9 @@ void Figure::drawTickText(QPainter *painter) {
 void Figure::drawGraphs(QPainter *painter) {
     QList<Graph*> graphs = findChildren<Graph*>();
     for(Graph *graph : graphs) {
-        graph->paint(this, painter);
+        if(graph->isVisible()) {
+            graph->paint(this, painter);
+        }
     }
 }
 
@@ -197,6 +208,43 @@ QColor Figure::color() const
 bool Figure::fitData() const
 {
     return m_fitData;
+}
+
+void Figure::saveSVG(QString filename)
+{
+    if (filename.isEmpty())
+        return;
+    QSvgGenerator generator;
+    generator.setFileName(QUrl(filename).toLocalFile());
+    generator.setSize(QSize(width(), height()));
+    generator.setViewBox(QRect(0, 0, width(), height()));
+    generator.setTitle(tr("SVG Generator Example Drawing"));
+    generator.setDescription(tr("An SVG drawing created by the SVG Generator "
+                             "Example provided with Qt."));
+    QPainter painter;
+    painter.begin(&generator);
+    paint(&painter);
+    painter.end();
+}
+
+void Figure::savePNG(QString filename)
+{
+    if (filename.isEmpty())
+        return;
+
+    QImage img(width(), height(), QImage::Format_ARGB32);
+
+    QPainter painter;
+    painter.begin(&img);
+    paint(&painter);
+    painter.end();
+
+    img.save(QUrl(filename).toLocalFile());
+}
+
+bool Figure::freeze() const
+{
+    return m_freeze;
 }
 
 QRectF Figure::scaled(const QRectF &rect) {
@@ -292,4 +340,25 @@ void Figure::setFitData(bool fitData)
 
     m_fitData = fitData;
     emit fitDataChanged(fitData);
+}
+
+void Figure::setFreeze(bool freeze)
+{
+    if (m_freeze == freeze)
+        return;
+
+    m_freeze = freeze;
+    if(m_freeze) storeCurrentFigure();
+    else update();
+    emit freezeChanged(freeze);
+}
+
+void Figure::storeCurrentFigure()
+{
+    m_image = QImage(width(), height(), QImage::Format_ARGB32);
+
+    QPainter painter;
+    painter.begin(&m_image);
+    paint(&painter);
+    painter.end();
 }

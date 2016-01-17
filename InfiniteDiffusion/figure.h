@@ -17,13 +17,14 @@ class Figure : public QQuickPaintedItem
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(bool fitData READ fitData WRITE setFitData NOTIFY fitDataChanged)
+    Q_PROPERTY(bool freeze READ freeze WRITE setFreeze NOTIFY freezeChanged)
 private:
     double m_xMin = 0;
     double m_xMax = 0;
     double m_yMin = 0;
     double m_yMax = 0;
     QRectF m_figureRectangle;
-
+    QImage m_image;
     int numTicksX() { return width() / 100; }
     int numTicksY() { return height() / 100; }
 
@@ -39,6 +40,7 @@ private:
     void drawText(QPointF position, QString text, QPainter *painter);
     QColor m_color = "white";
     bool m_fitData = true;
+    bool m_freeze = false;
 
 public:
     Figure(QQuickItem *parent = 0);
@@ -61,6 +63,11 @@ public:
     QFont font() const;
     QColor color() const;
     bool fitData() const;
+    bool freeze() const;
+
+    Q_INVOKABLE void saveSVG(QString filename);
+    Q_INVOKABLE void savePNG(QString filename);
+
 
 public slots:
     void setXMin(double xMin);
@@ -73,6 +80,8 @@ public slots:
     void setFont(QFont font);
     void setColor(QColor color);
     void setFitData(bool fitData);
+    void setFreeze(bool freeze);
+    void storeCurrentFigure();
 
 signals:
     void xMinChanged(double xMin);
@@ -85,6 +94,7 @@ signals:
     void fontChanged(QFont font);
     void colorChanged(QColor color);
     void fitDataChanged(bool fitData);
+    void freezeChanged(bool freeze);
 };
 
 #endif // FIGURE_H

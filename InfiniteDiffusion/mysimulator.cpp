@@ -129,6 +129,21 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     }
 }
 
+void MyWorker::normalizeHistogram() {
+    double integralSum = 0;
+    for(int i=0; i<m_histogram.size()-1; i++) {
+        QPointF &p1 = m_histogram[i];
+        QPointF &p2 = m_histogram[i+1];
+        double dx = p2.x() - p1.x();
+        double dy = p2.y() + p1.y();
+        integralSum += dx*dy;
+    }
+    integralSum *= 0.5;
+    for(QPointF &point : m_histogram) {
+        point.setY(point.y()/integralSum);
+    }
+}
+
 void MyWorker::createHistogram(int bins)
 {
     m_histogram.clear();;
@@ -158,6 +173,8 @@ void MyWorker::createHistogram(int bins)
         m_histogram[i].setX(middle);
         m_histogram[i].setY(gsl_histogram_get(hist,i));
     }
+    normalizeHistogram();
+
     m_diffusionMean = gsl_histogram_mean(hist);
     m_diffusionStandardDeviation = gsl_histogram_sigma(hist);
 

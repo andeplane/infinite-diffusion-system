@@ -16,9 +16,9 @@ private:
 
 public:
     Q_INVOKABLE void addPoint(float x, float y);
+    Q_INVOKABLE void setPoints(QVector<QPointF> points);
     QPointF operator[](int index) { return m_points[index+m_firstIndex*m_saveMemory]; }
     QPointF get(int index) { return m_points[index+m_firstIndex*m_saveMemory]; }
-    Q_INVOKABLE void setPoints(QVector<QPointF> points);
     void iterate(std::function<void(int i, QPointF point)> action);
     int size();
     void clear();
@@ -55,6 +55,8 @@ public:
     QColor color() const;
     Qt::PenStyle style() const;
     int width() const;
+    Q_INVOKABLE save(QString filename);
+    Q_INVOKABLE load(QString filename);
 
 public slots:
     void addPoint(float x, float y);
