@@ -6,6 +6,7 @@ import MySimulator 1.0
 import Diffusion 1.0
 import QMLPlot 1.0
 import QtQuick.Dialogs 1.2
+import Qt.labs.settings 1.0
 
 Window {
     visible: true
@@ -179,14 +180,18 @@ Window {
         }
     }
 
+    Settings {
+        property alias lastOpenedFolder: fileDialog.folder
+    }
+
     FileDialog {
         id: fileDialog
         property string mode
         title: "Please choose a file"
-        // folder: shortcuts.home
         selectMultiple: false
         selectFolder: false
         onAccepted: {
+            folder = fileDialog.fileUrls[0]
             if(mode === "load") {
                 loaded.load(fileDialog.fileUrls)
             } else if (mode === "save") {
