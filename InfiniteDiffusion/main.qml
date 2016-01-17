@@ -18,8 +18,8 @@ Window {
             }
 
             properties: SystemProperties {
-                geometry: CylinderGeometry { radius: 100.0 }
-                // geometry: PerlinGeometry { }
+                //geometry: CylinderGeometry { radius: 100.0 }
+                geometry: PerlinGeometry { }
                 //geometry: VoidGeometry { }
                 stepLength: 10.0
             }

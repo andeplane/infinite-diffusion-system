@@ -135,8 +135,18 @@ void MyWorker::createHistogram(int bins)
     float minValue = 1e10;
     float maxValue = 0;
     QVector<float> diffusionCoefficients;
+#ifdef __INTEL_COMPILER
+    int numberOfParticles = m_system->positions().size();
+    diffusionCoefficients.reserve(numberOfParticles);
+    for(int i=0; i<numberOfParticles; i++) {
+        float deltaR2 = (m_system->positions()[i] - m_system->originalPositions()[i]).lengthSquared();
+        float deltaR2OverT = deltaR2 / (6*m_time);
+        minValue = std::min(minValue, deltaR2OverT);
+        maxValue = std::max(maxValue, deltaR2OverT);
+        diffusionCoefficients.push_back(deltaR2OverT);
+    }
+#else
     diffusionCoefficients.reserve(m_system->particles().size());
-
     for(Particle &particle : m_system->particles()) {
         float deltaR2 = (particle.position() - particle.originalPosition()).lengthSquared();
         float deltaR2OverT = deltaR2 / (6*m_time);
@@ -144,7 +154,10 @@ void MyWorker::createHistogram(int bins)
         maxValue = std::max(maxValue, deltaR2OverT);
         diffusionCoefficients.push_back(deltaR2OverT);
     }
+#endif
     gsl_histogram *hist = gsl_histogram_alloc (bins);
+    qDebug() << "Min: " << minValue;
+    qDebug() << "Max: " << maxValue;
     gsl_histogram_set_ranges_uniform (hist, minValue, maxValue);
     for(const float &value : diffusionCoefficients) {
         gsl_histogram_increment (hist, value);

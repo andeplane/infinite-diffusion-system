@@ -5,7 +5,9 @@
 #include "particle.h"
 #include "random.h"
 #include "geometry/geometry.h"
-
+#ifdef __INTEL_COMPILER
+#include <mkl.h>
+#endif
 class SystemProperties : public QObject
 {
     Q_OBJECT
@@ -35,7 +37,15 @@ class System : public QObject
     Q_OBJECT
     Q_PROPERTY(SystemProperties* properties READ properties WRITE setProperties NOTIFY propertiesChanged)
 private:
+#ifdef __INTEL_COMPILER
+    VSLStreamStatePtr m_intelRandomStream;
+    QVector<float> m_randomFloats;
+    QVector<int> m_randomInts;
+    QVector<QVector3D> m_positions;
+    QVector<QVector3D> m_originalPositions;
+#else
     QVector<Particle> m_particles;
+#endif
     SystemProperties* m_properties = nullptr;
     Random m_random;
 
@@ -45,9 +55,14 @@ public:
     Q_INVOKABLE void createParticles(int numberOfParticles, float from, float to);
 
     // Getters and setters
+#ifdef __INTEL_COMPILER
+    QVector<QVector3D> &positions() { return m_positions; }
+    QVector<QVector3D> &originalPositions() { return m_originalPositions; }
+#else
     QVector<Particle> &particles() { return m_particles; }
-    SystemProperties* properties() const;
+#endif
     QVector<QVector3D> particlePositions();
+    SystemProperties* properties() const;
 
 public slots:
     void setProperties(SystemProperties* properties);
