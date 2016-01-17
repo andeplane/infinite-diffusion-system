@@ -146,7 +146,7 @@ int LineGraph::width() const
     return m_width;
 }
 
-LineGraph::save(QString filename)
+void LineGraph::save(QString filename)
 {
     if(!m_dataSource) return;
     QFile file(QUrl(filename).toLocalFile());
@@ -162,7 +162,7 @@ LineGraph::save(QString filename)
     file.close();
 }
 
-LineGraph::load(QString filename)
+void LineGraph::load(QString filename)
 {
     if(!m_dataSource) return;
     QFile file(QUrl(filename).toLocalFile());
