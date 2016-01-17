@@ -22,7 +22,7 @@ void System::tick()
     m_randomInts.resize(numberOfParticles);
     viRngUniform(VSL_RNG_METHOD_UNIFORM_STD, m_intelRandomStream, numberOfParticles, &m_randomInts.front(), 0, 2);
     vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, m_intelRandomStream, numberOfParticles, &m_randomFloats.front(), -m_properties->stepLength(), m_properties->stepLength());
-#pragma simd
+#pragma omp parallel for
     for(int i=0; i<numberOfParticles; i++) {
         const int moveDimension = m_randomInts[i];
         const float step = m_randomFloats[i];

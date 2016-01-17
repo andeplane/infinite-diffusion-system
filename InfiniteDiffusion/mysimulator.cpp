@@ -131,12 +131,13 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 
 void MyWorker::createHistogram(int bins)
 {
-    m_histogram.clear();;
+    int numberOfParticles = m_system->positions().size();
+    if(numberOfParticles == 0) return;
+    m_histogram.clear();
     float minValue = 1e10;
     float maxValue = 0;
     QVector<float> diffusionCoefficients;
 #ifdef __INTEL_COMPILER
-    int numberOfParticles = m_system->positions().size();
     diffusionCoefficients.reserve(numberOfParticles);
     for(int i=0; i<numberOfParticles; i++) {
         float deltaR2 = (m_system->positions()[i] - m_system->originalPositions()[i]).lengthSquared();
@@ -156,8 +157,6 @@ void MyWorker::createHistogram(int bins)
     }
 #endif
     gsl_histogram *hist = gsl_histogram_alloc (bins);
-    qDebug() << "Min: " << minValue;
-    qDebug() << "Max: " << maxValue;
     gsl_histogram_set_ranges_uniform (hist, minValue, maxValue);
     for(const float &value : diffusionCoefficients) {
         gsl_histogram_increment (hist, value);
@@ -185,6 +184,9 @@ void MyWorker::work()
     m_elapsedTimer.restart();
     m_system->tick();
     m_totalWorkTime += m_elapsedTimer.elapsed();
+    // qDebug() << "Ticked using " << m_elapsedTimer.elapsed() << " ms.";
+    m_elapsedTimer.restart();
     createHistogram(100);
+    // qDebug() << "Created histogram using " << m_elapsedTimer.elapsed() << " ms.";
 
 }

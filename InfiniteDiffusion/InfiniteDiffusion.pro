@@ -1,6 +1,7 @@
 TEMPLATE = app
 CONFIG += c++11
-QMAKE_CXXFLAGS += -vec-report=2
+QMAKE_CXXFLAGS += -vec-report=2 -openmp
+QMAKE_LFLAGS += -openmp
 QT += qml quick widgets opengl openglextensions
 
 SOURCES += main.cpp \
