@@ -14,7 +14,9 @@ SOURCES += main.cpp \
     geometry/voidgeometry.cpp \
     QMLPlot/figure.cpp \
     QMLPlot/graph.cpp \
-    QMLPlot/linegraph.cpp
+    QMLPlot/linegraph.cpp \
+    statistics/statistic.cpp \
+    statistics/statisticdiffusiondistribution.cpp
 
 LIBS += -L../../build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release/
 LIBS += -L/projects/GeometryLibrary/build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release
@@ -46,4 +48,7 @@ HEADERS += \
     geometry/voidgeometry.h \
     QMLPlot/figure.h \
     QMLPlot/graph.h \
-    QMLPlot/linegraph.h
+    QMLPlot/linegraph.h \
+    statistics/statistic.h \
+    statistics/statisticdiffusiondistribution.h \
+    statistics/statistics.h

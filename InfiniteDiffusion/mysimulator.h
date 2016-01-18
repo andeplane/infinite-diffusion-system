@@ -14,7 +14,6 @@ class MyWorker : public SimulatorWorker
     Q_OBJECT
 private:
     QElapsedTimer m_elapsedTimer;
-    int m_time = 0;
     System *m_system = nullptr;
     QVector<QPointF> m_histogram;
     float m_diffusionMean = 0;

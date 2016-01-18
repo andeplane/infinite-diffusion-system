@@ -2,6 +2,8 @@
 
 #include <QObject>
 #include <QVector>
+#include <QVariantList>
+#include "statistics/statistics.h"
 #include "particle.h"
 #include "random.h"
 #include "geometry/geometry.h"
@@ -55,10 +57,16 @@ class System : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(SystemProperties* properties READ properties WRITE setProperties NOTIFY propertiesChanged)
+    Q_PROPERTY(float time READ time WRITE setTime NOTIFY timeChanged)
+    Q_PROPERTY(float dt READ dt WRITE setDt NOTIFY dtChanged)
+    Q_PROPERTY(QVariantList statistics READ statistics WRITE setStatistics NOTIFY statisticsChanged)
 private:
     QVector<Particle> m_particles;
     SystemProperties* m_properties = nullptr;
     Random m_random;
+    float m_time = 0;
+    float m_dt = 1;
+    QVariantList m_statistics;
 
 public:
     System();
@@ -69,10 +77,19 @@ public:
     QVector<Particle> &particles() { return m_particles; }
     SystemProperties* properties() const;
     QVector<QVector3D> particlePositions();
+    float time() const;
+    float dt() const;
+    QVariantList statistics() const;
 
 public slots:
     void setProperties(SystemProperties* properties);
+    void setTime(float time);
+    void setDt(float dt);
+    void setStatistics(QVariantList statistics);
 
 signals:
     void propertiesChanged(SystemProperties* properties);
+    void timeChanged(float time);
+    void dtChanged(float dt);
+    void statisticsChanged(QVariantList statistics);
 };

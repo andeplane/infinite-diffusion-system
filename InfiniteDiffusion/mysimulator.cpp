@@ -127,10 +127,10 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         }
         mySimulator->setDiffusionMean(m_diffusionMean);
         mySimulator->setDiffusionStandardDeviation(m_diffusionStandardDeviation);
-        mySimulator->setTime(m_time);
+        mySimulator->setTime(m_system->time());
         m_histogramBins = mySimulator->histogramBins();
-        if(m_time>0) {
-            mySimulator->setTimePerTimestep(m_totalWorkTime / m_time);
+        if(m_system->time()>0) {
+            mySimulator->setTimePerTimestep(m_totalWorkTime / m_system->time());
         }
     }
 }
@@ -171,7 +171,7 @@ void MyWorker::createHistogram(int bins)
 
     for(Particle &particle : m_system->particles()) {
         float deltaR2 = (particle.position() - particle.originalPosition()).lengthSquared();
-        float deltaR2OverT = deltaR2 / (6*m_time);
+        float deltaR2OverT = deltaR2 / (6*m_system->time());
         minValue = std::min(minValue, deltaR2OverT);
         maxValue = std::max(maxValue, deltaR2OverT);
         diffusionCoefficients.push_back(deltaR2OverT);
@@ -204,10 +204,10 @@ void MyWorker::createHistogram(int bins)
 void MyWorker::work()
 {
     if(!m_system) return;
-    m_time++;
     m_elapsedTimer.restart();
     bool didTick = m_system->tick();
-    m_totalWorkTime += m_elapsedTimer.elapsed();
-    if(didTick) createHistogram(m_histogramBins);
-
+    if(didTick) {
+        m_totalWorkTime += m_elapsedTimer.elapsed();
+        createHistogram(m_histogramBins);
+    }
 }
