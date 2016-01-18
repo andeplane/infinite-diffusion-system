@@ -191,7 +191,6 @@ Window {
         selectMultiple: false
         selectFolder: false
         onAccepted: {
-            folder = fileDialog.fileUrls[0]
             if(mode === "load") {
                 loaded.load(fileDialog.fileUrls)
             } else if (mode === "save") {

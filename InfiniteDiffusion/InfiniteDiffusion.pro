@@ -16,12 +16,15 @@ SOURCES += main.cpp \
     graph.cpp \
     geometry/voidgeometry.cpp
 
-unix|win32: LIBS += -L../../build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release/
-unix|win32: LIBS += -L/projects/GeometryLibrary/build-GeometryLibrary-Intel_Compiler-Release -lGeometryLibrary
-LIBS += -L/usr/local/lib -lgsl
+LIBS += -L../../build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release/
+LIBS += -L/projects/GeometryLibrary/build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release
+LIBS += -lGeometryLibrary
 INCLUDEPATH += /projects/GeometryLibrary/GeometryLibrary
 INCLUDEPATH += ../../GeometryLibrary/
+
 INCLUDEPATH += /usr/local/include
+LIBS += -L/usr/local/lib -lgsl
+
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
