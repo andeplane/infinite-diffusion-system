@@ -4,8 +4,8 @@
 #include "geometry/geometries.h"
 #include "system.h"
 #include "mysimulator.h"
-#include "figure.h"
-#include "linegraph.h"
+#include "../QMLPlot/figure.h"
+#include "../QMLPlot/linegraph.h"
 int main(int argc, char *argv[])
 {
     qmlRegisterType<Figure>("QMLPlot", 1,0,"Figure");

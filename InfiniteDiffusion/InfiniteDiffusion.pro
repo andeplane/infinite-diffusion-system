@@ -11,10 +11,10 @@ SOURCES += main.cpp \
     geometry/geometry.cpp \
     geometry/cylindergeometry.cpp \
     random.cpp \
-    figure.cpp \
-    linegraph.cpp \
-    graph.cpp \
-    geometry/voidgeometry.cpp
+    geometry/voidgeometry.cpp \
+    ../QMLPlot/figure.cpp \
+    ../QMLPlot/graph.cpp \
+    ../QMLPlot/linegraph.cpp
 
 LIBS += -L../../build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release/
 LIBS += -L/projects/GeometryLibrary/build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release
@@ -43,7 +43,7 @@ HEADERS += \
     geometry/cylindergeometry.h \
     geometry/geometries.h \
     random.h \
-    figure.h \
-    linegraph.h \
-    graph.h \
-    geometry/voidgeometry.h
+    geometry/voidgeometry.h \
+    ../QMLPlot/figure.h \
+    ../QMLPlot/graph.h \
+    ../QMLPlot/linegraph.h
