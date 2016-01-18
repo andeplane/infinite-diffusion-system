@@ -23,12 +23,26 @@ void Figure::paint(QPainter *painter)
         painter->drawImage(boundingRect(), m_image);
         return;
     }
-    if(m_fitData) {
+    if(m_fitData || m_fitX || m_fitY) {
         QList<Graph*> graphs = findChildren<Graph*>();
+        double xMin = 1e10;
+        double xMax = -1e10;
+        double yMin = 1e10;
+        double yMax = -1e10;
         for(Graph *graph : graphs) {
             if(graph->isVisible()) {
-                graph->bounds(m_xMin, m_xMax, m_yMin, m_yMax);
+                graph->bounds(xMin, xMax, yMin, yMax);
             }
+        }
+
+        if(m_fitData || m_fitX) {
+            setXMax(xMax);
+            setXMin(xMin);
+        }
+
+        if(m_fitData || m_fitY) {
+            setYMax(yMax);
+            setYMin(yMin);
         }
     }
     // Calculate how much space we need for titles etc
@@ -242,6 +256,16 @@ void Figure::savePNG(QString filename)
     img.save(QUrl(filename).toLocalFile());
 }
 
+bool Figure::fitX() const
+{
+    return m_fitX;
+}
+
+bool Figure::fitY() const
+{
+    return m_fitY;
+}
+
 bool Figure::freeze() const
 {
     return m_freeze;
@@ -361,4 +385,22 @@ void Figure::storeCurrentFigure()
     painter.begin(&m_image);
     paint(&painter);
     painter.end();
+}
+
+void Figure::setFitX(bool fitX)
+{
+    if (m_fitX == fitX)
+        return;
+
+    m_fitX = fitX;
+    emit fitXChanged(fitX);
+}
+
+void Figure::setFitY(bool fitY)
+{
+    if (m_fitY == fitY)
+        return;
+
+    m_fitY = fitY;
+    emit fitYChanged(fitY);
 }

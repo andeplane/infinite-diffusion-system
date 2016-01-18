@@ -37,6 +37,11 @@ float MySimulator::timePerTimestep() const
     return m_timePerTimestep;
 }
 
+int MySimulator::histogramBins() const
+{
+    return m_histogramBins;
+}
+
 void MySimulator::setSystem(System *system)
 {
     if (m_system == system)
@@ -91,6 +96,15 @@ void MySimulator::setTimePerTimestep(float timePerTimestep)
     emit timePerTimestepChanged(timePerTimestep);
 }
 
+void MySimulator::setHistogramBins(int histogramBins)
+{
+    if (m_histogramBins == histogramBins)
+        return;
+
+    m_histogramBins = histogramBins;
+    emit histogramBinsChanged(histogramBins);
+}
+
 SimulatorWorker *MySimulator::createWorker()
 {
     return new MyWorker();
@@ -114,6 +128,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         mySimulator->setDiffusionMean(m_diffusionMean);
         mySimulator->setDiffusionStandardDeviation(m_diffusionStandardDeviation);
         mySimulator->setTime(m_time);
+        m_histogramBins = mySimulator->histogramBins();
         if(m_time>0) {
             mySimulator->setTimePerTimestep(m_totalWorkTime / m_time);
         }
@@ -189,6 +204,6 @@ void MyWorker::work()
     m_elapsedTimer.restart();
     m_system->tick();
     m_totalWorkTime += m_elapsedTimer.elapsed();
-    createHistogram(100);
+    createHistogram(m_histogramBins);
 
 }

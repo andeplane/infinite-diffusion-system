@@ -17,6 +17,8 @@ class Figure : public QQuickPaintedItem
     Q_PROPERTY(QFont font READ font WRITE setFont NOTIFY fontChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(bool fitData READ fitData WRITE setFitData NOTIFY fitDataChanged)
+    Q_PROPERTY(bool fitX READ fitX WRITE setFitX NOTIFY fitXChanged)
+    Q_PROPERTY(bool fitY READ fitY WRITE setFitY NOTIFY fitYChanged)
     Q_PROPERTY(bool freeze READ freeze WRITE setFreeze NOTIFY freezeChanged)
 private:
     double m_xMin = 0;
@@ -41,6 +43,8 @@ private:
     QColor m_color = "white";
     bool m_fitData = true;
     bool m_freeze = false;
+    bool m_fitX = false;
+    bool m_fitY = false;
 
 public:
     Figure(QQuickItem *parent = 0);
@@ -64,9 +68,12 @@ public:
     QColor color() const;
     bool fitData() const;
     bool freeze() const;
+    bool fitX() const;
+    bool fitY() const;
 
     Q_INVOKABLE void saveSVG(QString filename);
     Q_INVOKABLE void savePNG(QString filename);
+
 
 
 public slots:
@@ -82,6 +89,8 @@ public slots:
     void setFitData(bool fitData);
     void setFreeze(bool freeze);
     void storeCurrentFigure();
+    void setFitX(bool fitX);
+    void setFitY(bool fitY);
 
 signals:
     void xMinChanged(double xMin);
@@ -95,6 +104,8 @@ signals:
     void colorChanged(QColor color);
     void fitDataChanged(bool fitData);
     void freezeChanged(bool freeze);
+    void fitXChanged(bool fitX);
+    void fitYChanged(bool fitY);
 };
 
 #endif // FIGURE_H

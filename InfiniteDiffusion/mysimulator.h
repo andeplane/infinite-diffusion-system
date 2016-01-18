@@ -19,6 +19,7 @@ private:
     float m_diffusionMean = 0;
     float m_diffusionStandardDeviation = 0;
     double m_totalWorkTime = 0;
+    int m_histogramBins = 100;
     // SimulatorWorker interface
     virtual void synchronizeSimulator(Simulator *simulator);
     virtual void synchronizeRenderer(Renderable *renderableObject);
@@ -38,6 +39,7 @@ class MySimulator : public Simulator
     Q_PROPERTY(float diffusionStandardDeviation READ diffusionStandardDeviation WRITE setDiffusionStandardDeviation NOTIFY diffusionStandardDeviationChanged)
     Q_PROPERTY(int time READ time WRITE setTime NOTIFY timeChanged)
     Q_PROPERTY(float timePerTimestep READ timePerTimestep WRITE setTimePerTimestep NOTIFY timePerTimestepChanged)
+    Q_PROPERTY(int histogramBins READ histogramBins WRITE setHistogramBins NOTIFY histogramBinsChanged)
 private:
     System* m_system = nullptr;
     LineGraphDataSource* m_lineGraphDataSource = nullptr;
@@ -45,6 +47,7 @@ private:
     float m_diffusionStandardDeviation = 0;
     int m_time = 0;
     float m_timePerTimestep = 0;
+    int m_histogramBins = 100;
 
 public:
     MySimulator();
@@ -54,6 +57,7 @@ public:
     float diffusionStandardDeviation() const;
     int time() const;
     float timePerTimestep() const;
+    int histogramBins() const;
 
 public slots:
     void setSystem(System* system);
@@ -62,6 +66,7 @@ public slots:
     void setDiffusionStandardDeviation(float diffusionStandardDeviation);
     void setTime(int time);
     void setTimePerTimestep(float timePerTimestep);
+    void setHistogramBins(int histogramBins);
 
 signals:
     void systemChanged(System* system);
@@ -70,6 +75,7 @@ signals:
     void diffusionStandardDeviationChanged(float diffusionStandardDeviation);
     void timeChanged(int time);
     void timePerTimestepChanged(float timePerTimestep);
+    void histogramBinsChanged(int histogramBins);
 
 protected:
     virtual SimulatorWorker *createWorker();

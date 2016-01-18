@@ -231,10 +231,6 @@ void LineGraph::setWidth(int width)
 
 void LineGraph::bounds(double &xMin, double &xMax, double &yMin, double &yMax)
 {
-    xMin = 1e10;
-    xMax = -1e10;
-    yMin = 1e10;
-    yMax = -1e10;
     if(m_dataSource->size() == 0) return;
     m_dataSource->iterate([&](int i, QPointF point) {
         Q_UNUSED(i);
