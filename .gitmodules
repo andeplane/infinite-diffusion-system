@@ -3,4 +3,4 @@
 	url = git@github.com:ComputationalPhysics/SimVis.git
 [submodule "InfiniteDiffusion/QMLPlot"]
 	path = InfiniteDiffusion/QMLPlot
-	url = https://github.com/andeplane/QMLPlot.git
+	url = git@github.com:andeplane/QMLPlot.git
