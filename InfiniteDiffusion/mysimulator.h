@@ -1,7 +1,7 @@
 #pragma once
 #include <SimVis/Simulator>
 #include "system.h"
-#include "../QMLPlot/linegraph.h"
+#include "QMLPlot/linegraph.h"
 #include "geometry/geometries.h"
 #include "gsl/gsl_histogram.h"
 

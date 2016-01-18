@@ -12,10 +12,6 @@ bool System::tick()
 
     if(m_properties->willReset()) {
         m_properties->setWillReset(false);
-        qDebug() << "Number of particles: " << m_properties->numberOfParticles();
-        qDebug() << "PosMin: " << m_properties->posMin();
-        qDebug() << "PosMax: " << m_properties->posMax();
-
         createParticles(m_properties->numberOfParticles(), m_properties->posMin(), m_properties->posMax());
         return false;
     }
