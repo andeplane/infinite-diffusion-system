@@ -161,7 +161,9 @@ void MyWorker::normalizeHistogram() {
 
 void MyWorker::createHistogram(int bins)
 {
-    m_histogram.clear();;
+    m_histogram.clear();
+    if(m_system->particles().size() == 0) return;
+
     float minValue = 1e10;
     float maxValue = 0;
     QVector<float> diffusionCoefficients;
@@ -174,6 +176,8 @@ void MyWorker::createHistogram(int bins)
         maxValue = std::max(maxValue, deltaR2OverT);
         diffusionCoefficients.push_back(deltaR2OverT);
     }
+    if(minValue >= maxValue) return;
+
     gsl_histogram *hist = gsl_histogram_alloc (bins);
     gsl_histogram_set_ranges_uniform (hist, minValue, maxValue);
     for(const float &value : diffusionCoefficients) {
@@ -202,8 +206,8 @@ void MyWorker::work()
     if(!m_system) return;
     m_time++;
     m_elapsedTimer.restart();
-    m_system->tick();
+    bool didTick = m_system->tick();
     m_totalWorkTime += m_elapsedTimer.elapsed();
-    createHistogram(m_histogramBins);
+    if(didTick) createHistogram(m_histogramBins);
 
 }
