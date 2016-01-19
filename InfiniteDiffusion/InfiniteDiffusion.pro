@@ -14,15 +14,22 @@ SOURCES += main.cpp \
     geometry/voidgeometry.cpp \
     QMLPlot/figure.cpp \
     QMLPlot/graph.cpp \
-    QMLPlot/linegraph.cpp
+    QMLPlot/linegraph.cpp \
+    GeometryLibrary/geometrylibrary.cpp \
+    GeometryLibrary/model.cpp \
+    GeometryLibrary/models/multifractalmodel.cpp \
+    GeometryLibrary/models/multifractalparameters.cpp \
+    GeometryLibrary/models/noiseparameters.cpp \
+    GeometryLibrary/models/regularmodel.cpp \
+    GeometryLibrary/noise.cpp \
+    GeometryLibrary/parameters.cpp \
+    GeometryLibrary/perlin.cpp \
+    GeometryLibrary/simplex.cpp \
+    GeometryLibrary/simplexnoise.cpp
 
-LIBS += -L../../build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release/
-LIBS += -L/projects/GeometryLibrary/build-GeometryLibrary-Desktop_Qt_5_5_1_clang_64bit-Release
-LIBS += -lGeometryLibrary
-INCLUDEPATH += /projects/GeometryLibrary/GeometryLibrary
-INCLUDEPATH += ../../GeometryLibrary/
 
 INCLUDEPATH += /usr/local/include
+INCLUDEPATH += GeometryLibrary
 LIBS += -L/usr/local/lib -lgsl
 
 RESOURCES += qml.qrc
@@ -46,4 +53,15 @@ HEADERS += \
     geometry/voidgeometry.h \
     QMLPlot/figure.h \
     QMLPlot/graph.h \
-    QMLPlot/linegraph.h
+    QMLPlot/linegraph.h \
+    GeometryLibrary/geometrylibrary.h \
+    GeometryLibrary/model.h \
+    GeometryLibrary/models/multifractalmodel.h \
+    GeometryLibrary/models/multifractalparameters.h \
+    GeometryLibrary/models/noiseparameters.h \
+    GeometryLibrary/models/regularmodel.h \
+    GeometryLibrary/noise.h \
+    GeometryLibrary/parameters.h \
+    GeometryLibrary/perlin.h \
+    GeometryLibrary/simplex.h \
+    GeometryLibrary/simplexnoise.h

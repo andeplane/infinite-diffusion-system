@@ -4,3 +4,6 @@
 [submodule "InfiniteDiffusion/QMLPlot"]
 	path = InfiniteDiffusion/QMLPlot
 	url = git@github.com:andeplane/QMLPlot.git
+[submodule "InfiniteDiffusion/GeometryLibrary"]
+	path = InfiniteDiffusion/GeometryLibrary
+	url = git@github.com:leuat/GeometryLibrary.git
