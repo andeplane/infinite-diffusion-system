@@ -12,7 +12,15 @@ bool System::tick()
 
     if(m_properties->willReset()) {
         m_properties->setWillReset(false);
+        m_time = 0;
         createParticles(m_properties->numberOfParticles(), m_properties->posMin(), m_properties->posMax());
+
+        for(QVariant &obj : m_statistics) {
+            Statistic *statistic = obj.value<Statistic*>();
+            statistic->reset();
+            statistic->tick(this);
+        }
+
         return false;
     }
 
@@ -26,6 +34,13 @@ bool System::tick()
             particle[moveDimension] -= step;
         }
     }
+    m_time += m_properties->dt();
+
+    for(QVariant &obj : m_statistics) {
+        Statistic *statistic = obj.value<Statistic*>();
+        statistic->tick(this);
+    }
+
     return true;
 }
 
@@ -44,6 +59,15 @@ QVector<QVector3D> System::particlePositions()
     return positions;
 }
 
+float System::time() const
+{
+    return m_time;
+}
+ QVariantList System::statistics() const
+{
+    return m_statistics;
+}
+
 
 void System::setProperties(SystemProperties *properties)
 {
@@ -52,6 +76,24 @@ void System::setProperties(SystemProperties *properties)
 
     m_properties = properties;
     emit propertiesChanged(properties);
+}
+
+void System::setTime(float time)
+{
+    if (m_time == time)
+        return;
+
+    m_time = time;
+    emit timeChanged(time);
+}
+
+void System::setStatistics(QVariantList statistics)
+{
+    if (m_statistics == statistics)
+        return;
+
+    m_statistics = statistics;
+    emit statisticsChanged(statistics);
 }
 
 Geometry *SystemProperties::geometry() const
@@ -82,6 +124,11 @@ int SystemProperties::posMin() const
 int SystemProperties::posMax() const
 {
     return m_posMax;
+}
+
+float SystemProperties::dt() const
+{
+    return m_dt;
 }
 
 void System::createParticles(int numberOfParticles, float from, float to)
@@ -150,4 +197,13 @@ void SystemProperties::setPosMax(int posMax)
 
     m_posMax = posMax;
     emit posMaxChanged(posMax);
+}
+
+void SystemProperties::setDt(float dt)
+{
+    if (m_dt == dt)
+        return;
+
+    m_dt = dt;
+    emit dtChanged(dt);
 }

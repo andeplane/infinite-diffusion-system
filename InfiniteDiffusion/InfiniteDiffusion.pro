@@ -25,7 +25,9 @@ SOURCES += main.cpp \
     GeometryLibrary/parameters.cpp \
     GeometryLibrary/perlin.cpp \
     GeometryLibrary/simplex.cpp \
-    GeometryLibrary/simplexnoise.cpp
+    GeometryLibrary/simplexnoise.cpp \
+    statistics/statistic.cpp \
+    statistics/statisticdiffusiondistribution.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -64,4 +66,7 @@ HEADERS += \
     GeometryLibrary/parameters.h \
     GeometryLibrary/perlin.h \
     GeometryLibrary/simplex.h \
-    GeometryLibrary/simplexnoise.h
+    GeometryLibrary/simplexnoise.h \
+    statistics/statistic.h \
+    statistics/statisticdiffusiondistribution.h \
+    statistics/statistics.h
