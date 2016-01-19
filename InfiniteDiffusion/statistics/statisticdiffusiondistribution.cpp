@@ -32,11 +32,12 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
         points[i].setX(middle);
         points[i].setY(gsl_histogram_get(hist,i));
     }
+    points.push_front(QPointF(0,0)); // Add a 0,0 point to make graph look nicr
     normalizeHistogram(points);
-
     setMean(gsl_histogram_mean(hist));
     setStandardDeviation(gsl_histogram_sigma(hist));
 
+    m_dataSource->update();
     gsl_histogram_free(hist);
 }
 
@@ -44,18 +45,20 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
 void StatisticDiffusionDistribution::compute()
 {
     if(m_timesteps.size() == 0) return;
-
     float smallestDiffusionCoefficient = 1e10;
     float largestDiffusionCoefficient = 0;
     int numberOfParticles = m_timesteps.front()->m_positions.size();
     m_diffusionCoefficients.clear();
     m_diffusionCoefficients.reserve(0.5*m_timesteps.size()*(m_timesteps.size()-1)*numberOfParticles);
+    float maxDeltaT = m_timesteps.last()->m_timestamp - m_timesteps.front()->m_timestamp;
+
     for(int i=0; i<m_timesteps.size(); i++) {
         const float timestamp_i = m_timesteps[i]->m_timestamp;
         const QVector<QVector3D> &positions_i = m_timesteps[i]->m_positions;
         for(int j=i+1; j<m_timesteps.size(); j++) {
             const float timestamp_j = m_timesteps[j]->m_timestamp;
             const float deltaT = timestamp_j - timestamp_i;
+            if(deltaT < maxDeltaT*0.5) continue;
             const QVector<QVector3D> &positions_j = m_timesteps[j]->m_positions;
             if(positions_i.size() != positions_j.size()) {
                 qFatal("Error in StatisticDiffusionDistribution::compute(). Two timesteps differ in number of timesteps");
@@ -72,6 +75,8 @@ void StatisticDiffusionDistribution::compute()
             }
         }
     }
+
+    computeHistogram(smallestDiffusionCoefficient, largestDiffusionCoefficient);
 }
 
 float StatisticDiffusionDistribution::mean() const
@@ -120,6 +125,24 @@ void StatisticDiffusionDistribution::setTimeBetweenSampling(float timeBetweenSam
     emit timeBetweenSamplingChanged(timeBetweenSampling);
 }
 
+void StatisticDiffusionDistribution::setFractionOfMaxDeltaTSampling(float fractionOfMaxDeltaTSampling)
+{
+    if (m_fractionOfMaxDeltaTSampling == fractionOfMaxDeltaTSampling)
+        return;
+
+    m_fractionOfMaxDeltaTSampling = fractionOfMaxDeltaTSampling;
+    emit fractionOfMaxDeltaTSamplingChanged(fractionOfMaxDeltaTSampling);
+}
+
+void StatisticDiffusionDistribution::setTimeBetweenComputing(float timeBetweenComputing)
+{
+    if (m_timeBetweenComputing == timeBetweenComputing)
+        return;
+
+    m_timeBetweenComputing = timeBetweenComputing;
+    emit timeBetweenComputingChanged(timeBetweenComputing);
+}
+
 int StatisticDiffusionDistribution::histogramBins() const
 {
     return m_histogramBins;
@@ -128,12 +151,18 @@ int StatisticDiffusionDistribution::histogramBins() const
 
 void StatisticDiffusionDistribution::tick(System *system)
 {
-    float deltaT = system->time() - m_lastUpdateTimestamp;
-    if(deltaT < m_timeBetweenSampling && system->time() != 0) return;
+    float deltaT = system->time() - m_lastSamplingTimestamp;
+    if(deltaT >= m_timeBetweenSampling || system->time() == 0) {
+        m_lastSamplingTimestamp = system->time();
+        auto particlePositions = system->particlePositions();
+        addData(particlePositions, system->time());
+    }
 
-    auto particlePositions = system->particlePositions();
-    addData(particlePositions, system->time());
-    compute();
+    deltaT = system->time() - m_lastComputeTimestamp;
+    if(deltaT >= m_timeBetweenComputing) {
+        m_lastComputeTimestamp = system->time();
+        compute();
+    }
 }
 
 float StatisticDiffusionDistribution::timeBetweenSampling() const
@@ -150,5 +179,15 @@ void StatisticDiffusionDistribution::reset()
     m_timesteps.clear();
     m_diffusionCoefficients.clear();
     m_dataSource->clear();
-    m_lastUpdateTimestamp = 0;
+    m_lastSamplingTimestamp = 0;
+}
+
+float StatisticDiffusionDistribution::fractionOfMaxDeltaTSampling() const
+{
+    return m_fractionOfMaxDeltaTSampling;
+}
+
+float StatisticDiffusionDistribution::timeBetweenComputing() const
+{
+    return m_timeBetweenComputing;
 }

@@ -13,6 +13,7 @@ class SystemProperties : public QObject
     Q_OBJECT
     Q_PROPERTY(Geometry* geometry READ geometry WRITE setGeometry NOTIFY geometryChanged)
     Q_PROPERTY(float stepLength READ stepLength WRITE setStepLength NOTIFY stepLengthChanged)
+    Q_PROPERTY(float dt READ dt WRITE setDt NOTIFY dtChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
     Q_PROPERTY(int numberOfParticles READ numberOfParticles WRITE setNumberOfParticles NOTIFY numberOfParticlesChanged)
     Q_PROPERTY(int posMin READ posMin WRITE setPosMin NOTIFY posMinChanged)
@@ -25,6 +26,7 @@ private:
     int m_numberOfParticles = 100000;
     int m_posMin = -100;
     int m_posMax = 100;
+    float m_dt = 1;
 
 public:
     Geometry* geometry() const;
@@ -33,6 +35,7 @@ public:
     int numberOfParticles() const;
     int posMin() const;
     int posMax() const;
+    float dt() const;
 
 public slots:
     void setGeometry(Geometry* geometry);
@@ -41,6 +44,7 @@ public slots:
     void setNumberOfParticles(int numberOfParticles);
     void setPosMin(int posMin);
     void setPosMax(int posMax);
+    void setDt(float dt);
 
 signals:
     void geometryChanged(Geometry* geometry);
@@ -51,6 +55,7 @@ signals:
     void numberOfParticlesChanged(int numberOfParticles);
     void posMinChanged(int posMin);
     void posMaxChanged(int posMax);
+    void dtChanged(float dt);
 };
 
 class System : public QObject
@@ -58,14 +63,12 @@ class System : public QObject
     Q_OBJECT
     Q_PROPERTY(SystemProperties* properties READ properties WRITE setProperties NOTIFY propertiesChanged)
     Q_PROPERTY(float time READ time WRITE setTime NOTIFY timeChanged)
-    Q_PROPERTY(float dt READ dt WRITE setDt NOTIFY dtChanged)
     Q_PROPERTY(QVariantList statistics READ statistics WRITE setStatistics NOTIFY statisticsChanged)
 private:
     QVector<Particle> m_particles;
     SystemProperties* m_properties = nullptr;
     Random m_random;
     float m_time = 0;
-    float m_dt = 1;
     QVariantList m_statistics;
 
 public:
@@ -78,18 +81,15 @@ public:
     SystemProperties* properties() const;
     QVector<QVector3D> particlePositions();
     float time() const;
-    float dt() const;
     QVariantList statistics() const;
 
 public slots:
     void setProperties(SystemProperties* properties);
     void setTime(float time);
-    void setDt(float dt);
     void setStatistics(QVariantList statistics);
 
 signals:
     void propertiesChanged(SystemProperties* properties);
     void timeChanged(float time);
-    void dtChanged(float dt);
     void statisticsChanged(QVariantList statistics);
 };

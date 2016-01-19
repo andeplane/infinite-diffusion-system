@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include "geometry/geometries.h"
+#include "statistics/statistics.h"
 #include "system.h"
 #include "mysimulator.h"
 #include "QMLPlot/figure.h"
@@ -17,7 +18,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<PerlinGeometry>("Diffusion", 1, 0, "PerlinGeometry");
     qmlRegisterType<CylinderGeometry>("Diffusion", 1, 0, "CylinderGeometry");
     qmlRegisterType<VoidGeometry>("Diffusion", 1, 0, "VoidGeometry");
+    qmlRegisterType<StatisticDiffusionDistribution>("Diffusion",1,0,"StatisticDiffusionDistribution");
     qmlRegisterUncreatableType<Geometry>("Diffusion",1,0, "Geometry", "Abstract");
+    qmlRegisterUncreatableType<Statistic>("Diffusion",1,0, "Statistic", "Abstract");
 
     QGuiApplication app(argc, argv);
 

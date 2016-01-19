@@ -33,8 +33,8 @@ bool System::tick()
             // Reject. We collided with a wall
             particle[moveDimension] -= step;
         }
-        m_time += m_dt;
     }
+    m_time += m_properties->dt();
 
     for(QVariant &obj : m_statistics) {
         Statistic *statistic = obj.value<Statistic*>();
@@ -63,13 +63,7 @@ float System::time() const
 {
     return m_time;
 }
-
-float System::dt() const
-{
-    return m_dt;
-}
-
-QVariantList System::statistics() const
+ QVariantList System::statistics() const
 {
     return m_statistics;
 }
@@ -91,15 +85,6 @@ void System::setTime(float time)
 
     m_time = time;
     emit timeChanged(time);
-}
-
-void System::setDt(float dt)
-{
-    if (m_dt == dt)
-        return;
-
-    m_dt = dt;
-    emit dtChanged(dt);
 }
 
 void System::setStatistics(QVariantList statistics)
@@ -139,6 +124,11 @@ int SystemProperties::posMin() const
 int SystemProperties::posMax() const
 {
     return m_posMax;
+}
+
+float SystemProperties::dt() const
+{
+    return m_dt;
 }
 
 void System::createParticles(int numberOfParticles, float from, float to)
@@ -207,4 +197,13 @@ void SystemProperties::setPosMax(int posMax)
 
     m_posMax = posMax;
     emit posMaxChanged(posMax);
+}
+
+void SystemProperties::setDt(float dt)
+{
+    if (m_dt == dt)
+        return;
+
+    m_dt = dt;
+    emit dtChanged(dt);
 }
