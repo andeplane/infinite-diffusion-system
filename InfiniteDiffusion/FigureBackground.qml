@@ -4,9 +4,9 @@ import QtQuick.Controls 1.4
 import SimVis 1.0
 import MySimulator 1.0
 import Diffusion 1.0
-import QMLPlot 1.0
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
+import DataSource 1.0
 
 Rectangle {
     id: figureBackground
@@ -16,39 +16,37 @@ Rectangle {
     property real fullHeight: 420
     width: 400
     height: fullHeight
-    color: Qt.rgba(0.76, 0.66, 0.57, 0.85)
+    color: Qt.rgba(1.0, 1.0, 1.0, 0.85)
     anchors.left: parent.left
     anchors.top: parent.top
-    
+
     Figure {
         id: figure
         width: parent.width
         height: parent.height-20
         visible: figureBackground.height===figureBackground.fullHeight
-        fitData: true
-        fitExact: false
-        // fitY: true
-        yMin: 0
-        yMax: 0.05
-        xMin: 0
-        xMax: 100
-        color: Qt.rgba(0.0, 0.0, 0.0, 0.0)
-        xLabel: "D"
-        yLabel: "P(D)"
-        title: ""
         LineGraph {
             id: loaded
+            figure: figure
             color: "red"
-            dataSource: LineGraphDataSource {
+            dataSource: DataSource {
                 
             }
-            
-            width: 1
+            onDataSourceChanged: {
+                dataSource.updated.connect(function() {
+                    figure.updateLimits()
+                })
+            }
         }
         LineGraph {
             id: graph
+            figure: figure
             dataSource: statisticDiffusion.dataSource
-            width: 1
+            onDataSourceChanged: {
+                dataSource.updated.connect(function() {
+                    figure.updateLimits()
+                })
+            }
         }
     }
     

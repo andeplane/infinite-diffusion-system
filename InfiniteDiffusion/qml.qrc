@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>FigureBackground.qml</file>
+        <file>Figure.qml</file>
+        <file>LineGraph.qml</file>
     </qresource>
 </RCC>

@@ -4,7 +4,6 @@ import QtQuick.Controls 1.4
 import SimVis 1.0
 import MySimulator 1.0
 import Diffusion 1.0
-import QMLPlot 1.0
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
 
@@ -25,9 +24,9 @@ Window {
 
     StatisticDiffusionDistribution {
         id: statisticDiffusion
-        timeBetweenSampling: 200
+        timeBetweenSampling: 100
         histogramBins: 500
-        timeBetweenComputing: 1000
+        timeBetweenComputing: 200
     }
 
     MySimulator {

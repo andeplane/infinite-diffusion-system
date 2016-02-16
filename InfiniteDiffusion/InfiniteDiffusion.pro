@@ -1,4 +1,5 @@
 TEMPLATE = app
+CONFIG -= app_bundle
 CONFIG += c++11
 
 QT += qml quick widgets opengl openglextensions svg
@@ -19,7 +20,6 @@ SOURCES += main.cpp \
     GeometryLibrary/model.cpp \
     GeometryLibrary/models/multifractalmodel.cpp \
     GeometryLibrary/models/multifractalparameters.cpp \
-    GeometryLibrary/models/noiseparameters.cpp \
     GeometryLibrary/models/regularmodel.cpp \
     GeometryLibrary/noise.cpp \
     GeometryLibrary/parameters.cpp \
@@ -27,7 +27,11 @@ SOURCES += main.cpp \
     GeometryLibrary/simplex.cpp \
     GeometryLibrary/simplexnoise.cpp \
     statistics/statistic.cpp \
-    statistics/statisticdiffusiondistribution.cpp
+    statistics/statisticdiffusiondistribution.cpp \
+    datasource.cpp \
+    nogui.cpp \
+    cutil.cpp \
+    GeometryLibrary/models/regularparameters.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -60,7 +64,6 @@ HEADERS += \
     GeometryLibrary/model.h \
     GeometryLibrary/models/multifractalmodel.h \
     GeometryLibrary/models/multifractalparameters.h \
-    GeometryLibrary/models/noiseparameters.h \
     GeometryLibrary/models/regularmodel.h \
     GeometryLibrary/noise.h \
     GeometryLibrary/parameters.h \
@@ -69,4 +72,9 @@ HEADERS += \
     GeometryLibrary/simplexnoise.h \
     statistics/statistic.h \
     statistics/statisticdiffusiondistribution.h \
-    statistics/statistics.h
+    statistics/statistics.h \
+    datasource.h \
+    nogui.h \
+    cinifile.h \
+    cutil.h \
+    GeometryLibrary/models/regularparameters.h

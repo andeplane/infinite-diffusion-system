@@ -23,7 +23,7 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
         gsl_histogram_increment (hist, value);
     }
 
-    QVector<QPointF> &points = m_dataSource->points();
+    QVector<QPointF> points;
     points.resize(m_histogramBins);
     for(int i=0; i<m_histogramBins; i++) {
         double upper, lower;
@@ -33,11 +33,10 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
         points[i].setY(gsl_histogram_get(hist,i));
     }
     points.push_front(QPointF(0,0)); // Add a 0,0 point to make graph look nicr
-    normalizeHistogram(points);
     setMean(gsl_histogram_mean(hist));
     setStandardDeviation(gsl_histogram_sigma(hist));
 
-    m_dataSource->update();
+    m_dataSource->setPoints(points, true);
     gsl_histogram_free(hist);
 }
 
