@@ -30,5 +30,6 @@ NoGUI::NoGUI(CIniFile *iniFile) :
 void NoGUI::run()
 {
     SystemProperties systemProperties;
+    // systemProperties.setGeometry();
 
 }

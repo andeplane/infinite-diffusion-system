@@ -19,7 +19,6 @@ SOURCES += main.cpp \
     GeometryLibrary/geometrylibrary.cpp \
     GeometryLibrary/model.cpp \
     GeometryLibrary/models/multifractalmodel.cpp \
-    GeometryLibrary/models/multifractalparameters.cpp \
     GeometryLibrary/models/regularmodel.cpp \
     GeometryLibrary/noise.cpp \
     GeometryLibrary/parameters.cpp \
@@ -31,7 +30,7 @@ SOURCES += main.cpp \
     datasource.cpp \
     nogui.cpp \
     cutil.cpp \
-    GeometryLibrary/models/regularparameters.cpp
+    GeometryLibrary/models/model.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -63,7 +62,6 @@ HEADERS += \
     GeometryLibrary/geometrylibrary.h \
     GeometryLibrary/model.h \
     GeometryLibrary/models/multifractalmodel.h \
-    GeometryLibrary/models/multifractalparameters.h \
     GeometryLibrary/models/regularmodel.h \
     GeometryLibrary/noise.h \
     GeometryLibrary/parameters.h \
@@ -77,4 +75,4 @@ HEADERS += \
     nogui.h \
     cinifile.h \
     cutil.h \
-    GeometryLibrary/models/regularparameters.h
+    GeometryLibrary/models/model.h
