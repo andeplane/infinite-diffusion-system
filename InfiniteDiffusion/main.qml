@@ -6,20 +6,14 @@ import MySimulator 1.0
 import Diffusion 1.0
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
+import GeometryLibrary 1.0
 
 Window {
     visible: true
     width: 1024
     height: 768
-    CylinderGeometry {
-        id: cylinderGeometry
-        radius: parseFloat(cylinderRadius.text)
-    }
-    PerlinGeometry {
-        id: perlinGeometry
-    }
-    VoidGeometry {
-        id: voidGeometry
+    RegularNoiseModel {
+        id: noiseModel
     }
 
     StatisticDiffusionDistribution {
@@ -39,6 +33,7 @@ Window {
                 posMin: parseFloat(posMin.text)
                 posMax: parseFloat(posMax.text)
                 numberOfParticles: parseInt(numberOfParticles.text)
+                model: noiseModel
             }
             statistics: [
                 statisticDiffusion

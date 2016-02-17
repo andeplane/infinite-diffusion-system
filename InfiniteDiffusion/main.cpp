@@ -6,7 +6,7 @@
 #include "mysimulator.h"
 #include "datasource.h"
 #include "nogui.h"
-
+#include "GeometryLibrary/models/models.h"
 int main(int argc, char *argv[])
 {
     bool GUI = true;
@@ -19,7 +19,9 @@ int main(int argc, char *argv[])
         qmlRegisterType<System>("Diffusion", 1, 0, "System");
         qmlRegisterType<SystemProperties>("Diffusion", 1, 0, "SystemProperties");
         qmlRegisterType<StatisticDiffusionDistribution>("Diffusion",1,0,"StatisticDiffusionDistribution");
+        qmlRegisterType<RegularNoiseModel>("GeometryLibrary", 1, 0, "RegularNoiseModel");
         // qmlRegisterUncreatableType<Geometry>("Diffusion",1,0, "Geometry", "Abstract");
+        qmlRegisterUncreatableType<Model>("GeometryLibrary",1,0, "Model", "Abstract");
         qmlRegisterUncreatableType<Statistic>("Diffusion",1,0, "Statistic", "Abstract");
 
         QApplication app(argc, argv);

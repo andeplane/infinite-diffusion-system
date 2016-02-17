@@ -1,6 +1,5 @@
 #include "nogui.h"
 #include "GeometryLibrary/models/models.h"
-#include "GeometryLibrary/parameters.h"
 
 NoGUI::NoGUI(CIniFile *iniFile) :
     m_iniFile(iniFile)
@@ -10,8 +9,7 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         // geometryLibrary.initialize();
     } else if(iniFile->find("model", "regular")) {
         Model *model = new RegularNoiseModel();
-        NoiseParameters *parameters = new NoiseParameters(iniFile->getdouble("octaves"), iniFile->getdouble("scale"), iniFile->getdouble("persistence"), iniFile->getdouble("threshold"), iniFile->getdouble("inverted"), iniFile->getdouble("seed"), iniFile->getdouble("absolute"));
-        model->setParameters(parameters);
+        model->loadParameters(iniFile);
         systemProperties.setModel(model);
     }
 }
