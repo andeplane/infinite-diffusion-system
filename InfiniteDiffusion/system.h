@@ -6,12 +6,11 @@
 #include "statistics/statistics.h"
 #include "particle.h"
 #include "random.h"
-#include "geometry/geometry.h"
-
+#include "GeometryLibrary/models/models.h"
 class SystemProperties : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Geometry* geometry READ geometry WRITE setGeometry NOTIFY geometryChanged)
+    Q_PROPERTY(Model* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(float stepLength READ stepLength WRITE setStepLength NOTIFY stepLengthChanged)
     Q_PROPERTY(float dt READ dt WRITE setDt NOTIFY dtChanged)
     Q_PROPERTY(bool willReset READ willReset WRITE setWillReset NOTIFY willResetChanged)
@@ -20,7 +19,7 @@ class SystemProperties : public QObject
     Q_PROPERTY(int posMax READ posMax WRITE setPosMax NOTIFY posMaxChanged)
 private:
 
-    Geometry* m_geometry = nullptr;
+    Model* m_model = nullptr;
     float m_stepLength = 0.0;
     bool m_willReset = false;
     int m_numberOfParticles = 100000;
@@ -28,8 +27,8 @@ private:
     int m_posMax = 100;
     float m_dt = 1;
 
+
 public:
-    Geometry* geometry() const;
     float stepLength() const;
     bool willReset() const;
     int numberOfParticles() const;
@@ -37,25 +36,28 @@ public:
     int posMax() const;
     float dt() const;
 
+    Model* model() const;
+
 public slots:
-    void setGeometry(Geometry* geometry);
     void setStepLength(float stepLength);
     void setWillReset(bool willReset);
     void setNumberOfParticles(int numberOfParticles);
     void setPosMin(int posMin);
     void setPosMax(int posMax);
     void setDt(float dt);
+    void setModel(Model* model);
 
 signals:
-    void geometryChanged(Geometry* geometry);
     void stepLengthChanged(float stepLength);
     void willResetChanged(bool willReset);
-
-    friend class System;
     void numberOfParticlesChanged(int numberOfParticles);
     void posMinChanged(int posMin);
     void posMaxChanged(int posMax);
     void dtChanged(float dt);
+    void modelChanged(Model* model);
+
+public:
+    friend class System;
 };
 
 class System : public QObject

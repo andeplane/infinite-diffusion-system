@@ -2,9 +2,7 @@
 #include <SimVis/Simulator>
 #include "system.h"
 #include "QMLPlot/linegraph.h"
-#include "geometry/geometries.h"
-#include "gsl/gsl_histogram.h"
-
+#include <gsl/gsl_histogram.h>
 #include <QVector>
 #include <QVector3D>
 #include <QElapsedTimer>

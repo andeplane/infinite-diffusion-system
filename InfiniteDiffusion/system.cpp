@@ -8,7 +8,7 @@ System::System()
 
 bool System::tick()
 {
-    if(!m_properties->geometry()) return false;
+    if(!m_properties->model()) return false;
 
     if(m_properties->willReset()) {
         m_properties->setWillReset(false);
@@ -24,12 +24,12 @@ bool System::tick()
         return false;
     }
 
-    Geometry *currentGeometry = m_properties->geometry();
+    Model *currentModel = m_properties->model();
     for(Particle &particle : m_particles) {
         int moveDimension = m_random.nextInt(0,2);
         double step = (1.0 - 2.0*m_random.nextBool())*m_properties->stepLength();
         particle[moveDimension] += step;
-        if(!currentGeometry->pointIsVoid(particle.position())) {
+        if(!currentModel->isInVoid(particle.position())) {
             // Reject. We collided with a wall
             particle[moveDimension] -= step;
         }
@@ -96,11 +96,6 @@ void System::setStatistics(QVariantList statistics)
     emit statisticsChanged(statistics);
 }
 
-Geometry *SystemProperties::geometry() const
-{
-    return m_geometry;
-}
-
 float SystemProperties::stepLength() const
 {
     return m_stepLength;
@@ -131,6 +126,11 @@ float SystemProperties::dt() const
     return m_dt;
 }
 
+Model *SystemProperties::model() const
+{
+    return m_model;
+}
+
 void System::createParticles(int numberOfParticles, float from, float to)
 {
     if(!m_properties) return;
@@ -140,18 +140,9 @@ void System::createParticles(int numberOfParticles, float from, float to)
         while(!isInVoid) {
             particle.setPosition(m_random.nextQVector3D(from,to));
             particle.setOriginalPosition(particle.position());
-            isInVoid = m_properties->m_geometry->pointIsVoid(particle.position());
+            isInVoid = m_properties->m_model->isInVoid(particle.position());
         }
     }
-}
-
-void SystemProperties::setGeometry(Geometry *geometry)
-{
-    if (m_geometry == geometry)
-        return;
-
-    m_geometry = geometry;
-    emit geometryChanged(geometry);
 }
 
 void SystemProperties::setStepLength(float stepLength)
@@ -206,4 +197,13 @@ void SystemProperties::setDt(float dt)
 
     m_dt = dt;
     emit dtChanged(dt);
+}
+
+void SystemProperties::setModel(Model *model)
+{
+    if (m_model == model)
+        return;
+
+    m_model = model;
+    emit modelChanged(model);
 }
