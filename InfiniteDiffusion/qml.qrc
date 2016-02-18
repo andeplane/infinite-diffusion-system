@@ -4,5 +4,10 @@
         <file>FigureBackground.qml</file>
         <file>Figure.qml</file>
         <file>LineGraph.qml</file>
+        <file>DiffusionVisualizer.qml</file>
+        <file>ParametersGUI.qml</file>
+        <file>ParameterSlider.qml</file>
+        <file>ParameterTextfield.qml</file>
+        <file>ParameterSwitch.qml</file>
     </qresource>
 </RCC>

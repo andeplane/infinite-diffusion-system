@@ -12,8 +12,9 @@ Window {
     visible: true
     width: 1024
     height: 768
+
     RegularNoiseModel {
-        id: noiseModel
+        id: regularNoiseModel
     }
 
     StatisticDiffusionDistribution {
@@ -33,7 +34,6 @@ Window {
                 posMin: parseFloat(posMin.text)
                 posMax: parseFloat(posMax.text)
                 numberOfParticles: parseInt(numberOfParticles.text)
-                model: noiseModel
             }
             statistics: [
                 statisticDiffusion
@@ -41,61 +41,61 @@ Window {
         }
     }
 
-    Visualizer {
+    DiffusionVisualizer {
         anchors.fill: parent
         simulator: simulator
-        camera: Camera {
-            id: camera
-            position: Qt.vector3d(0,0,-5000)
-            farPlane: 1000000
-        }
-        backgroundColor: "black"
-
-        TrackballNavigator {
-            id: navigator
-            anchors.fill: parent
-            camera: camera
-        }
-
-        Points {
-            id: points
-            pointSize: 2.0
-        }
     }
 
     FigureBackground {
         id: figureBackground
+        radius: 10
     }
 
     Rectangle {
         id: controller
-        property real fullHeight: 420
         width: 400
-        height: fullHeight
+        height: settingsColumn.height
         color: Qt.rgba(0.76, 0.66, 0.57, 0.85)
         anchors.right: parent.right
         anchors.top: parent.top
-        Button {
-            width: 20
-            height: 20
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: 2
-            text: "-"
-            onClicked: {
-                if(text==="-") {
-                    text = "+"
-                    controller.height = 40
-                } else {
-                    text = "-"
-                    controller.height = controller.fullHeight
-                }
-            }
-        }
+        radius: 10
+
         Column {
+            id: settingsColumn
             spacing: 10
             Label {
                 text: "Simulation settings"
+            }
+
+            Row {
+                Label {
+                    text: "Model: "
+                }
+
+                ComboBox {
+                    currentIndex: 0
+                    model: ListModel {
+                        id: cbItems
+                        ListElement { text: "Regular noise";}
+                        ListElement { text: "Multifractal noise";}
+                        ListElement { text: "Void";}
+                    }
+                    width: 200
+                    onCurrentIndexChanged: {
+                        if(cbItems.get(currentIndex).text === "Regular noise") {
+                            systemProperties.model = regularNoiseModel
+                        }
+                    }
+                }
+            }
+
+            ParametersGUI {
+                id: paramGUI
+                color: "white"
+                radius: 10
+                textColor: "black"
+                labelWidth: 100
+                parameters: systemProperties.model ? systemProperties.model.parameters : undefined
             }
 
             GroupBox {
@@ -137,54 +137,9 @@ Window {
                 }
             }
 
-            GroupBox {
-                width: parent.width - 20
-                title: "Geometry"
-                visible: controller.height===controller.fullHeight
-                ExclusiveGroup {
-                    id: geometryGroup
-                }
-
-                Column {
-                    Row {
-                        RadioButton {
-                            id: radGeometryVoid
-                            text: "Void"
-                            checked: true
-                            exclusiveGroup: geometryGroup
-                        }
-                    }
-                    Row {
-                        RadioButton {
-                            id: radGeometryCylinder
-                            text: "Cylinder"
-                            exclusiveGroup: geometryGroup
-                        }
-                        TextField {
-                            id: cylinderRadius
-                            text: "200"
-                        }
-                    }
-                    Row {
-                        RadioButton {
-                            id: radGeometryPerlin
-                            text: "Perlin"
-                            exclusiveGroup: geometryGroup
-                        }
-                    }
-                }
-            }
             Button {
                 text: "Run"
                 onClicked: {
-                    if(radGeometryVoid.checked) {
-                        systemProperties.geometry = voidGeometry
-                    } else if(radGeometryCylinder.checked) {
-                        systemProperties.geometry = cylinderGeometry
-                    } else if(radGeometryPerlin.checked) {
-                        systemProperties.geometry = perlinGeometry
-                    }
-
                     systemProperties.willReset = true
                 }
             }
@@ -202,15 +157,15 @@ Window {
         selectMultiple: false
         selectFolder: false
         onAccepted: {
-            if(mode === "load") {
-                figureBackground.loaded.load(fileDialog.fileUrls)
-            } else if (mode === "save") {
-                figureBackground.graph.save(fileDialog.fileUrls)
-            } else if (mode === "saveSVG") {
-                figureBackground.figure.saveSVG(fileDialog.fileUrls)
-            } else if (mode === "savePNG") {
-                figureBackground.figure.savePNG(fileDialog.fileUrls)
-            }
+            //            if(mode === "load") {
+            //                figureBackground.loaded.load(fileDialog.fileUrls)
+            //            } else if (mode === "save") {
+            //                figureBackground.graph.save(fileDialog.fileUrls)
+            //            } else if (mode === "saveSVG") {
+            //                figureBackground.figure.saveSVG(fileDialog.fileUrls)
+            //            } else if (mode === "savePNG") {
+            //                figureBackground.figure.savePNG(fileDialog.fileUrls)
+            //            }
         }
     }
 }

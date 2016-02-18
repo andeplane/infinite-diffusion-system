@@ -12,9 +12,6 @@ public:
     double dval;
 };
 
-
-
-
 class CIniFile  {
 public:
     string filename;

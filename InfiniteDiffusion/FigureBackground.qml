@@ -16,9 +16,9 @@ Rectangle {
     property real fullHeight: 420
     width: 400
     height: fullHeight
-    color: Qt.rgba(1.0, 1.0, 1.0, 0.85)
     anchors.left: parent.left
     anchors.top: parent.top
+    color: Qt.rgba(1.0, 1.0, 1.0, 0.85)
 
     Figure {
         id: figure
@@ -75,59 +75,7 @@ Rectangle {
             }
         }
     }
-    
-    Row {
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        Button {
-            text: "Freeze"
-            visible: figureBackground.height===figureBackground.fullHeight
-            onClicked: {
-                figure.freeze = !figure.freeze
-                if(figure.freeze) {
-                    text = "Unfreeze"
-                } else {
-                    text = "Freeze"
-                }
-            }
-        }
-        Button {
-            text: "Save SVG"
-            visible: figureBackground.height===figureBackground.fullHeight
-            onClicked: {
-                fileDialog.mode = "saveSVG"
-                fileDialog.selectExisting = false
-                fileDialog.open()
-            }
-        }
-        Button {
-            text: "Save PNG"
-            visible: figureBackground.height===figureBackground.fullHeight
-            onClicked: {
-                fileDialog.mode = "savePNG"
-                fileDialog.selectExisting = false
-                fileDialog.open()
-            }
-        }
-        Button {
-            text: "Load"
-            visible: figureBackground.height===figureBackground.fullHeight
-            onClicked: {
-                fileDialog.mode = "load"
-                fileDialog.selectExisting = true
-                fileDialog.open()
-            }
-        }
-        Button {
-            text: "Save"
-            visible: figureBackground.height===figureBackground.fullHeight
-            onClicked: {
-                fileDialog.mode = "save"
-                fileDialog.selectExisting = false
-                fileDialog.open()
-            }
-        }
-    }
+
     Button {
         width: 20
         height: 20
