@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     statistics/statisticdiffusiondistribution.cpp \
     datasource.cpp \
     nogui.cpp \
-    cutil.cpp
+    cutil.cpp \
+    GeometryLibrary/models/xyzmodel.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -56,4 +57,5 @@ HEADERS += \
     datasource.h \
     nogui.h \
     cinifile.h \
-    cutil.h
+    cutil.h \
+    GeometryLibrary/models/xyzmodel.h
