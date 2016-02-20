@@ -30,7 +30,7 @@ Window {
             id: system
             properties: SystemProperties {
                 id: systemProperties
-                stepLength: 10.0
+                stepLength: parseFloat(stepLength.text)
                 posMin: parseFloat(posMin.text)
                 posMax: parseFloat(posMax.text)
                 numberOfParticles: parseInt(numberOfParticles.text)
@@ -132,6 +132,17 @@ Window {
                         TextField {
                             id: posMax
                             text: "100"
+                        }
+                    }
+                    Row {
+                        spacing: 5
+                        Label {
+                            text: "Step length: "
+                        }
+
+                        TextField {
+                            id: stepLength
+                            text: "1.0"
                         }
                     }
                 }
