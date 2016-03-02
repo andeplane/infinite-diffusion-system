@@ -21,7 +21,10 @@ SOURCES += main.cpp \
     datasource.cpp \
     nogui.cpp \
     cutil.cpp \
-    GeometryLibrary/models/xyzmodel.cpp
+    GeometryLibrary/models/xyzmodel.cpp \
+    GeometryLibrary/likelihood/graphstatistics.cpp \
+    GeometryLibrary/likelihood/lgraph.cpp \
+    GeometryLibrary/likelihood/likelihood.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -58,4 +61,11 @@ HEADERS += \
     nogui.h \
     cinifile.h \
     cutil.h \
-    GeometryLibrary/models/xyzmodel.h
+    GeometryLibrary/models/xyzmodel.h \
+    GeometryLibrary/likelihood/graphstatistics.h \
+    GeometryLibrary/likelihood/lgraph.h \
+    GeometryLibrary/likelihood/likelihood.h \
+    GeometryLibrary/likelihood/spline.h
+
+DISTFILES += \
+    GeometryLibrary/README.md
