@@ -21,7 +21,6 @@ SOURCES += main.cpp \
     mysimulator.cpp \
     system.cpp \
     particle.cpp \
-    random.cpp \
     statistics/statistic.cpp \
     statistics/statisticdiffusiondistribution.cpp \
     datasource.cpp \
@@ -62,12 +61,12 @@ HEADERS += \
     mysimulator.h \
     system.h \
     particle.h \
-    random.h \
     statistics/statistic.h \
     statistics/statisticdiffusiondistribution.h \
     statistics/statistics.h \
     datasource.h \
-    nogui.h
+    nogui.h \
+    GeometryLibrary/misc/random.h
 
 DISTFILES += \
     GeometryLibrary/README.md

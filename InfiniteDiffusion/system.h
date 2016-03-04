@@ -5,7 +5,7 @@
 #include <QVariantList>
 #include "statistics/statistics.h"
 #include "particle.h"
-#include "random.h"
+#include "GeometryLibrary/misc/random.h"
 #include "GeometryLibrary/models/models.h"
 class SystemProperties : public QObject
 {
