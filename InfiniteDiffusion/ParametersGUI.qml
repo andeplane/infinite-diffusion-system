@@ -9,6 +9,7 @@ Rectangle {
     property real labelWidth: 80
     property color textColor: "black"
     property list<Item> additional
+    property real contentHeight: column.height
     width: column.width
     height: column.height
     color: "white"

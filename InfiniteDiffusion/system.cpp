@@ -11,6 +11,7 @@ bool System::tick()
     if(!m_properties->model()) return false;
 
     if(m_properties->willReset()) {
+        m_properties->model()->start();
         m_properties->setWillReset(false);
         m_time = 0;
         createParticles(m_properties->numberOfParticles(), m_properties->posMin(), m_properties->posMax());
@@ -21,10 +22,12 @@ bool System::tick()
             statistic->tick(this);
         }
 
+        m_properties->model()->stop();
         return false;
     }
 
     Model *currentModel = m_properties->model();
+    currentModel->start();
     for(Particle &particle : m_particles) {
         int moveDimension = m_random.nextInt(0,2);
         double step = (1.0 - 2.0*m_random.nextBool())*m_properties->stepLength();
@@ -34,6 +37,7 @@ bool System::tick()
             particle[moveDimension] -= step;
         }
     }
+    currentModel->stop();
     m_time += m_properties->dt();
 
     for(QVariant &obj : m_statistics) {

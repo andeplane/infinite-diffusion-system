@@ -12,6 +12,12 @@ SOURCES += main.cpp \
     GeometryLibrary/simplex.cpp \
     GeometryLibrary/simplexnoise.cpp \
     GeometryLibrary/models/model.cpp \
+    GeometryLibrary/models/xyzmodel.cpp \
+    GeometryLibrary/likelihood/graphstatistics.cpp \
+    GeometryLibrary/likelihood/lgraph.cpp \
+    GeometryLibrary/likelihood/likelihood.cpp \
+    GeometryLibrary/misc/cutil.cpp \
+    GeometryLibrary/misc/util.cpp \
     mysimulator.cpp \
     system.cpp \
     particle.cpp \
@@ -19,12 +25,7 @@ SOURCES += main.cpp \
     statistics/statistic.cpp \
     statistics/statisticdiffusiondistribution.cpp \
     datasource.cpp \
-    nogui.cpp \
-    cutil.cpp \
-    GeometryLibrary/models/xyzmodel.cpp \
-    GeometryLibrary/likelihood/graphstatistics.cpp \
-    GeometryLibrary/likelihood/lgraph.cpp \
-    GeometryLibrary/likelihood/likelihood.cpp
+    nogui.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -50,6 +51,14 @@ HEADERS += \
     GeometryLibrary/perlin.h \
     GeometryLibrary/simplex.h \
     GeometryLibrary/simplexnoise.h \
+    GeometryLibrary/models/xyzmodel.h \
+    GeometryLibrary/likelihood/graphstatistics.h \
+    GeometryLibrary/likelihood/lgraph.h \
+    GeometryLibrary/likelihood/likelihood.h \
+    GeometryLibrary/likelihood/spline.h \
+    GeometryLibrary/misc/cinifile.h \
+    GeometryLibrary/misc/cutil.h \
+    GeometryLibrary/misc/util.h \
     mysimulator.h \
     system.h \
     particle.h \
@@ -58,14 +67,7 @@ HEADERS += \
     statistics/statisticdiffusiondistribution.h \
     statistics/statistics.h \
     datasource.h \
-    nogui.h \
-    cinifile.h \
-    cutil.h \
-    GeometryLibrary/models/xyzmodel.h \
-    GeometryLibrary/likelihood/graphstatistics.h \
-    GeometryLibrary/likelihood/lgraph.h \
-    GeometryLibrary/likelihood/likelihood.h \
-    GeometryLibrary/likelihood/spline.h
+    nogui.h
 
 DISTFILES += \
     GeometryLibrary/README.md

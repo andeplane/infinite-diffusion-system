@@ -1,6 +1,6 @@
 #pragma once
 #include "mysimulator.h"
-#include "cinifile.h"
+#include "GeometryLibrary/misc/cinifile.h"
 #include "system.h"
 class NoGUI
 {

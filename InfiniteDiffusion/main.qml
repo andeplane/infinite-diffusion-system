@@ -95,7 +95,27 @@ Window {
                 radius: 10
                 textColor: "black"
                 labelWidth: 100
+                height: contentHeight + 30
                 parameters: systemProperties.model ? systemProperties.model.parameters : undefined
+                Row {
+                    anchors.bottom: parent.bottom
+                    Button {
+                        id: paramLoad
+                        text: "Load"
+                        onClicked: {
+                            fileDialogOpen.mode = "parameters"
+                            fileDialogOpen.open()
+                        }
+                    }
+                    Button {
+                        id: paramSave
+                        text: "Save"
+                        onClicked: {
+                            fileDialogSave.mode = "parameters"
+                            fileDialogSave.open()
+                        }
+                    }
+                }
             }
 
             GroupBox {
@@ -158,25 +178,33 @@ Window {
     }
 
     Settings {
-        property alias lastOpenedFolder: fileDialog.folder
+        property alias lastFileDialogOpenFolder: fileDialogOpen.folder
+        property alias lastFileDialogSaveFolder: fileDialogSave.folder
     }
 
     FileDialog {
-        id: fileDialog
+        id: fileDialogOpen
+
         property string mode
         title: "Please choose a file"
-        selectMultiple: false
-        selectFolder: false
+
         onAccepted: {
-            //            if(mode === "load") {
-            //                figureBackground.loaded.load(fileDialog.fileUrls)
-            //            } else if (mode === "save") {
-            //                figureBackground.graph.save(fileDialog.fileUrls)
-            //            } else if (mode === "saveSVG") {
-            //                figureBackground.figure.saveSVG(fileDialog.fileUrls)
-            //            } else if (mode === "savePNG") {
-            //                figureBackground.figure.savePNG(fileDialog.fileUrls)
-            //            }
+            if (mode==="parameters") {
+                systemProperties.model.parameters.load(fileDialogOpen.fileUrls.toString())
+            }
+        }
+    }
+
+    FileDialog {
+        id: fileDialogSave
+        selectExisting : false
+        property string mode
+        title: "Please choose a location to save"
+
+        onAccepted: {
+            if(mode==="parameters") {
+                systemProperties.model.parameters.save(fileDialogSave.fileUrls.toString())
+            }
         }
     }
 }

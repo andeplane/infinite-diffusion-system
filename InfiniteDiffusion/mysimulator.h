@@ -1,7 +1,6 @@
 #pragma once
 #include <SimVis/Simulator>
 #include "system.h"
-#include "QMLPlot/linegraph.h"
 #include <gsl/gsl_histogram.h>
 #include <QVector>
 #include <QVector3D>

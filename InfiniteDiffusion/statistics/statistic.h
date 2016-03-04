@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include "QMLPlot/linegraph.h"
 #include "datasource.h"
 class Statistic : public QObject
 {
