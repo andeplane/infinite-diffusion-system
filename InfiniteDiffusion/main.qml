@@ -17,6 +17,7 @@ Window {
         property alias lastFileDialogOpenFolder: fileDialogOpen.folder
         property alias lastFileDialogSaveFolder: fileDialogSave.folder
         property alias lastParametersFile: paramLoad.previous
+        property alias modelComboBoxCurrentIndex: modelComboBox.currentIndex
         property alias posMin: posMin.text
         property alias posMax: posMax.text
     }
@@ -144,7 +145,8 @@ Window {
                     height: 50
                     anchors.bottom: parent.bottom
                     OctreeControl {
-                        visible: (modelComboBox.currentText === "Regular noise")
+                        visible: (modelComboBox.currentText === "Static model from file")
+                        model: octreeModel
                         width: paramGUI.width
                     }
                 }
