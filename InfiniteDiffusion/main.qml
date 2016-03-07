@@ -97,8 +97,10 @@ Window {
                     }
                     width: 200
                     onCurrentIndexChanged: {
-                        if(cbItems.get(currentIndex).text === "Regular noise") {
+                        if(modelComboBox.currentText === "Regular noise") {
                             systemProperties.model = regularNoiseModel
+                        } else if(modelComboBox.currentText === "Static model from file") {
+                            systemProperties.model = octreeModel
                         }
                     }
                 }
