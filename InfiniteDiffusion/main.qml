@@ -13,6 +13,13 @@ Window {
     width: 1024
     height: 768
 
+    Settings {
+        property alias lastFileDialogOpenFolder: fileDialogOpen.folder
+        property alias lastFileDialogSaveFolder: fileDialogSave.folder
+        property alias posMin: posMin.text
+        property alias posMax: posMax.text
+    }
+
     RegularNoiseModel {
         id: regularNoiseModel
     }
@@ -101,6 +108,7 @@ Window {
                     anchors.bottom: parent.bottom
                     Button {
                         id: paramLoad
+                        property string previous
                         text: "Load"
                         onClicked: {
                             fileDialogOpen.mode = "parameters"
@@ -113,6 +121,15 @@ Window {
                         onClicked: {
                             fileDialogSave.mode = "parameters"
                             fileDialogSave.open()
+                        }
+                    }
+                    Button {
+                        id: paramLoadPrev
+
+                        text: "Load previous"
+                        onClicked: {
+                            previousFile =
+                            systemProperties.model.parameters.load(fileDialogOpen.fileUrls.toString())
                         }
                     }
                 }
@@ -177,11 +194,6 @@ Window {
         }
     }
 
-    Settings {
-        property alias lastFileDialogOpenFolder: fileDialogOpen.folder
-        property alias lastFileDialogSaveFolder: fileDialogSave.folder
-    }
-
     FileDialog {
         id: fileDialogOpen
 
@@ -190,6 +202,7 @@ Window {
 
         onAccepted: {
             if (mode==="parameters") {
+                paramLoad.previous = fileDialogOpen.fileUrls.toString()
                 systemProperties.model.parameters.load(fileDialogOpen.fileUrls.toString())
             }
         }
