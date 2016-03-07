@@ -24,6 +24,10 @@ Window {
         id: regularNoiseModel
     }
 
+    OctreeModel {
+        id: octreeModel
+    }
+
     StatisticDiffusionDistribution {
         id: statisticDiffusion
         timeBetweenSampling: 100

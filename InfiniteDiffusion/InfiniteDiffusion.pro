@@ -12,6 +12,7 @@ SOURCES += main.cpp \
     GeometryLibrary/simplex.cpp \
     GeometryLibrary/simplexnoise.cpp \
     GeometryLibrary/models/model.cpp \
+    GeometryLibrary/models/octree.cpp \
     GeometryLibrary/models/xyzmodel.cpp \
     GeometryLibrary/likelihood/graphstatistics.cpp \
     GeometryLibrary/likelihood/lgraph.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     GeometryLibrary/models/multifractalmodel.h \
     GeometryLibrary/models/regularnoisemodel.h \
     GeometryLibrary/models/model.h \
+    GeometryLibrary/models/octree.h \
     GeometryLibrary/models/models.h \
     GeometryLibrary/noise.h \
     GeometryLibrary/parameters.h \
