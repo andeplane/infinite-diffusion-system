@@ -82,6 +82,7 @@ Window {
                         id: cbItems
                         ListElement { text: "Regular noise";}
                         ListElement { text: "Multifractal noise";}
+                        ListElement { text: "Static model from file";}
                         ListElement { text: "Void";}
                     }
                     width: 200
