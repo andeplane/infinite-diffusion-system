@@ -16,6 +16,7 @@ Window {
     Settings {
         property alias lastFileDialogOpenFolder: fileDialogOpen.folder
         property alias lastFileDialogSaveFolder: fileDialogSave.folder
+        property alias lastParametersFile: paramLoad.previous
         property alias posMin: posMin.text
         property alias posMax: posMax.text
     }
@@ -84,6 +85,7 @@ Window {
                 }
 
                 ComboBox {
+                    id: modelComboBox
                     currentIndex: 0
                     model: ListModel {
                         id: cbItems
@@ -106,10 +108,10 @@ Window {
                 radius: 10
                 textColor: "black"
                 labelWidth: 100
-                height: contentHeight + 30
+                height: contentHeight + 30 + paramRect.height
                 parameters: systemProperties.model ? systemProperties.model.parameters : undefined
                 Row {
-                    anchors.bottom: parent.bottom
+                    anchors.bottom: paramRect.top
                     Button {
                         id: paramLoad
                         property string previous
@@ -132,9 +134,17 @@ Window {
 
                         text: "Load previous"
                         onClicked: {
-                            previousFile =
-                            systemProperties.model.parameters.load(fileDialogOpen.fileUrls.toString())
+                            systemProperties.model.parameters.load(paramLoad.previous)
                         }
+                    }
+                }
+                Rectangle {
+                    id: paramRect
+                    height: 50
+                    anchors.bottom: parent.bottom
+                    OctreeControl {
+                        visible: (modelComboBox.currentText === "Regular noise")
+                        width: paramGUI.width
                     }
                 }
             }

@@ -9,5 +9,6 @@
         <file>ParameterSlider.qml</file>
         <file>ParameterTextfield.qml</file>
         <file>ParameterSwitch.qml</file>
+        <file>OctreeControl.qml</file>
     </qresource>
 </RCC>
