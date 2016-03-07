@@ -39,6 +39,7 @@ Window {
 
     MySimulator {
         id: simulator
+        octree: octreeModel
         system: System {
             id: system
             properties: SystemProperties {

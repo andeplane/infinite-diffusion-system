@@ -66,6 +66,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         // Synchronize data between QML thread and computing thread (MySimulator is on QML, MyWorker is computing thread).
         // This is for instance data from user through GUI (sliders, buttons, text fields etc)
         m_system = mySimulator->system();
+        m_octree = mySimulator->octree();
         mySimulator->setTime(m_system->time());
         if(m_system->time()>0) {
             mySimulator->setTimePerTimestep(m_totalWorkTime / m_system->time());
@@ -86,6 +87,14 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         }
         points->setPositions(positions);
     }
+    TriangleCollection* triangleCollection = qobject_cast<TriangleCollection*>(renderableObject);
+    if (m_octree!=nullptr)
+    if(triangleCollection) {
+       // qDebug() << "TRIANGLE COLLECTION :" << m_octree->vboData().size() ;
+        triangleCollection->data = m_octree->vboData();
+        triangleCollection->dirty = true;
+     }
+
 }
 
 void MyWorker::work()

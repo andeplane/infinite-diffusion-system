@@ -26,4 +26,7 @@ Visualizer {
         id: points
         pointSize: 2.0
     }
+    TriangleCollection {
+        id: octreeTriangles
+    }
 }
