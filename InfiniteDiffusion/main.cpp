@@ -1,3 +1,4 @@
+#ifndef RUNUNITTESTS
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
@@ -42,4 +43,4 @@ int main(int argc, char *argv[])
         noGUI.run();
     }
 }
-
+#endif
