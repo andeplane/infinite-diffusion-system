@@ -9,6 +9,7 @@ import Qt.labs.settings 1.0
 import GeometryLibrary 1.0
 
 Visualizer {
+    property alias visualizeOctree: octreeTriangles.visible
     camera: Camera {
         id: camera
         position: Qt.vector3d(0,0,-5000)

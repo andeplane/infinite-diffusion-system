@@ -56,6 +56,7 @@ Window {
     }
 
     DiffusionVisualizer {
+        id: visualizer
         anchors.fill: parent
         simulator: simulator
     }
@@ -238,6 +239,14 @@ Window {
             if(mode==="parameters") {
                 systemProperties.model.parameters.save(fileDialogSave.fileUrls.toString())
             }
+        }
+    }
+
+    CheckBox {
+        text: "Octree visualizer"
+        checked: visualizer.visualizeOctree
+        onCheckedChanged: {
+            visualizer.visualizeOctree = checked
         }
     }
 }
