@@ -44,7 +44,7 @@ Row {
                 model.setFile(fileDialogOpen.fileUrls.toString())
                 model.readFile()
 //                model.removeCylinder(0.1);
-                model.buildTree();
+                model.buildTree(true);
             } else if(mode==="loadoctree") {
                 model.loadOctree(fileDialogOpen.fileUrls.toString())
             }
