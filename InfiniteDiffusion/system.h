@@ -17,6 +17,7 @@ class SystemProperties : public QObject
     Q_PROPERTY(int numberOfParticles READ numberOfParticles WRITE setNumberOfParticles NOTIFY numberOfParticlesChanged)
     Q_PROPERTY(int posMin READ posMin WRITE setPosMin NOTIFY posMinChanged)
     Q_PROPERTY(int posMax READ posMax WRITE setPosMax NOTIFY posMaxChanged)
+    Q_PROPERTY(bool periodic READ periodic WRITE setPeriodic NOTIFY periodicChanged)
 private:
 
     Model* m_model = nullptr;
@@ -26,7 +27,7 @@ private:
     int m_posMin = -100;
     int m_posMax = 100;
     float m_dt = 1;
-
+    bool m_periodic = true;
 
 public:
     float stepLength() const;
@@ -47,6 +48,15 @@ public slots:
     void setDt(float dt);
     void setModel(Model* model);
 
+    void setPeriodic(bool periodic)
+    {
+        if (m_periodic == periodic)
+            return;
+
+        m_periodic = periodic;
+        emit periodicChanged(periodic);
+    }
+
 signals:
     void stepLengthChanged(float stepLength);
     void willResetChanged(bool willReset);
@@ -56,8 +66,14 @@ signals:
     void dtChanged(float dt);
     void modelChanged(Model* model);
 
+    void periodicChanged(bool periodic);
+
 public:
-    friend class System;
+friend class System;
+bool periodic() const
+{
+    return m_periodic;
+}
 };
 
 class System : public QObject

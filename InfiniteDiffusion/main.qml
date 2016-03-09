@@ -249,5 +249,11 @@ Window {
             visualizer.visualizeOctree = checked
         }
     }
+    Slider {
+        value: visualizer.alpha
+        onValueChanged: visualizer.alpha = value
+        minimumValue: 0
+        maximumValue: 1
+    }
 }
 
