@@ -59,6 +59,26 @@ TEST_CASE( "XYZ model", "[models]" ) {
         REQUIRE(cellList[0][0].size()==numCellsZ);
     }
 
-//    xyzModel.updateDistanceToAtomField();
+    xyzModel.updateDistanceToAtomField();
+    SECTION( "Cell list" ) {
+        REQUIRE(xyzModel.isInVoid(0, 0, 0) == false);
+        REQUIRE(xyzModel.isInVoid(2, 5, 5) == false);
+        REQUIRE(xyzModel.isInVoid(100, 120, 5) == false);
+        REQUIRE(xyzModel.isInVoid(100, 120, 140) == false);
+        REQUIRE(xyzModel.isInVoid(100, 0, 140) == false);
+    }
+    xyzModel.removeCylinder(0.5);
+    xyzModel.updateDistanceToAtomField();
+
+    QVector3D systemSize(xyzModel.getLx(), xyzModel.getLy(), xyzModel.getLz());
+    QVector3D systemCenter(0.5*xyzModel.getLx(), 0.5*xyzModel.getLy(), 0.5*xyzModel.getLz());
+
+    SECTION( "Cylinder geometry" ) {
+        REQUIRE(xyzModel.isInVoid(systemCenter)==true);
+        REQUIRE(xyzModel.isInVoid(systemCenter.x(),systemCenter.y(),0)==true);
+        REQUIRE(xyzModel.isInVoid(0,0,0)==false);
+        REQUIRE(xyzModel.isInVoid(10,10,10)==false);
+        REQUIRE(xyzModel.isInVoid(100,100,100)==true);
+    }
 }
 #endif

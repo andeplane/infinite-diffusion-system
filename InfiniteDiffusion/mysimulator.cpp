@@ -95,7 +95,6 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         triangleCollection->dirty = true;
         m_octree->m_vboDirty = false;
      }
-
 }
 
 void MyWorker::work()
