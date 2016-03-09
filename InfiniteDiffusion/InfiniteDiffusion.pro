@@ -1,6 +1,6 @@
 TEMPLATE = app
 CONFIG += c++11
-DEFINES += RUNUNITTESTS
+#DEFINES += RUNUNITTESTS
 QT += qml quick widgets opengl openglextensions charts
 
 SOURCES += main.cpp \
