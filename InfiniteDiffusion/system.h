@@ -48,14 +48,7 @@ public slots:
     void setDt(float dt);
     void setModel(Model* model);
 
-    void setPeriodic(bool periodic)
-    {
-        if (m_periodic == periodic)
-            return;
-
-        m_periodic = periodic;
-        emit periodicChanged(periodic);
-    }
+    void setPeriodic(bool periodic);
 
 signals:
     void stepLengthChanged(float stepLength);
@@ -70,10 +63,7 @@ signals:
 
 public:
 friend class System;
-bool periodic() const
-{
-    return m_periodic;
-}
+bool periodic() const;
 };
 
 class System : public QObject
@@ -88,6 +78,7 @@ private:
     Random m_random;
     float m_time = 0;
     QVariantList m_statistics;
+    void applyPeriodic(QVector3D &position);
 
 public:
     System();

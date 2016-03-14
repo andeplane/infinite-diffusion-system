@@ -1,18 +1,35 @@
 #include "particle.h"
 
-QVector3D Particle::originalPosition() const
+QVector3D Particle::positionUnwrapped() const
 {
-    return m_originalPosition;
+    return m_positionUnwrapped;
 }
 
-void Particle::setOriginalPosition(const QVector3D &originalPosition)
+void Particle::setPositionUnwrapped(const QVector3D &positionUnwrapped)
 {
-    m_originalPosition = originalPosition;
+    m_positionUnwrapped = positionUnwrapped;
 }
 
 Particle::Particle()
 {
 
+}
+
+void Particle::addPosition(const QVector3D &delta)
+{
+    m_position[0] += delta[0];
+    m_position[1] += delta[1];
+    m_position[2] += delta[2];
+
+    m_positionUnwrapped[0] += delta[0];
+    m_positionUnwrapped[1] += delta[1];
+    m_positionUnwrapped[2] += delta[2];
+}
+
+void Particle::addPositionComponent(int dimension, float delta)
+{
+    m_position[dimension] += delta;
+    m_positionUnwrapped[dimension] += delta;
 }
 
 QVector3D Particle::position() const

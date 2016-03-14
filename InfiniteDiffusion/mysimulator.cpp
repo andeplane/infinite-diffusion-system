@@ -79,12 +79,12 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     Points *points = qobject_cast<Points*>(renderableObject);
     if(points) {
         QVector<QVector3D> positions = m_system->particlePositions();
-//        float deltaPos = (m_system->properties()->posMax() - m_system->properties()->posMin()) + m_system->properties()->posMin();
-//        QVector3D systemCenter(0.5*deltaPos,0.5*deltaPos,0.5*deltaPos);
+        float deltaPos = (m_system->properties()->posMax() - m_system->properties()->posMin()) + m_system->properties()->posMin();
+        QVector3D systemCenter(0.5*deltaPos,0.5*deltaPos,0.5*deltaPos);
 
-//        for(QVector3D &position : positions) {
-//            position -= systemCenter;
-//        }
+        for(QVector3D &position : positions) {
+            position -= systemCenter;
+        }
         points->setPositions(positions);
     }
     TriangleCollection* triangleCollection = qobject_cast<TriangleCollection*>(renderableObject);

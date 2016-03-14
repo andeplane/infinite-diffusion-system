@@ -1,6 +1,22 @@
 #include "system.h"
 #include <QDebug>
 
+void System::applyPeriodic(QVector3D &pos)
+{
+    const float posMin = m_properties->posMin();
+    const float posMax = m_properties->posMax();
+    const float delta = m_properties->posMax() - m_properties->posMin();
+
+    if(pos[0] < posMin) pos[0] += delta;
+    else if(pos[0] > posMax) pos[0] -= delta;
+
+    if(pos[1] < posMin) pos[1] += delta;
+    else if(pos[1] > posMax) pos[1] -= delta;
+
+    if(pos[2] < posMin) pos[2] += delta;
+    else if(pos[2] > posMax) pos[2] -= delta;
+}
+
 System::System()
 {
 
@@ -29,14 +45,22 @@ bool System::tick()
     Model *currentModel = m_properties->model();
     currentModel->start();
     for(Particle &particle : m_particles) {
+        QVector3D oldPosition = particle.position();
+        QVector3D newPosition = particle.position();
+
         int moveDimension = m_random.nextInt(0,2);
         double step = (1.0 - 2.0*m_random.nextBool())*m_properties->stepLength();
-        particle[moveDimension] += step;
-        if(!currentModel->isInVoid(particle.position())) {
-            // Reject. We collided with a wall
-            particle[moveDimension] -= step;
+        newPosition[moveDimension] += step;
+
+        if(m_properties->periodic()) applyPeriodic(newPosition);
+
+        if(currentModel->isInVoid(newPosition)) {
+            // Accept, still in void
+            particle.addPositionComponent(moveDimension, step);
+            if(m_properties->periodic()) applyPeriodic(particle.position());
         }
     }
+
     currentModel->stop();
     m_time += m_properties->dt();
 
@@ -58,7 +82,7 @@ QVector<QVector3D> System::particlePositions()
     QVector<QVector3D> positions;
     positions.reserve(m_particles.size());
     for(Particle &particle : m_particles) {
-        positions.push_back(particle.position());
+        positions.push_back(particle.positionUnwrapped());
     }
     return positions;
 }
@@ -67,7 +91,7 @@ float System::time() const
 {
     return m_time;
 }
- QVariantList System::statistics() const
+QVariantList System::statistics() const
 {
     return m_statistics;
 }
@@ -144,7 +168,7 @@ void System::createParticles(int numberOfParticles, float from, float to)
         bool isInVoid = false;
         while(!isInVoid) {
             particle.setPosition(m_random.nextQVector3D(from,to));
-            particle.setOriginalPosition(particle.position());
+            particle.setPositionUnwrapped(particle.position());
             isInVoid = currentModel->isInVoid(particle.position());
         }
     }
@@ -211,4 +235,18 @@ void SystemProperties::setModel(Model *model)
 
     m_model = model;
     emit modelChanged(model);
+}
+
+void SystemProperties::setPeriodic(bool periodic)
+{
+    if (m_periodic == periodic)
+        return;
+
+    m_periodic = periodic;
+    emit periodicChanged(periodic);
+}
+
+bool SystemProperties::periodic() const
+{
+    return m_periodic;
 }

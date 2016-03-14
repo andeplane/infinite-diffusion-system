@@ -17,7 +17,6 @@ Window {
         property alias lastFileDialogOpenFolder: fileDialogOpen.folder
         property alias lastFileDialogSaveFolder: fileDialogSave.folder
         property alias lastParametersFile: paramLoad.previous
-        property alias modelComboBoxCurrentIndex: modelComboBox.currentIndex
         property alias posMin: posMin.text
         property alias posMax: posMax.text
     }
@@ -47,6 +46,7 @@ Window {
                 stepLength: parseFloat(stepLength.text)
                 posMin: parseFloat(posMin.text)
                 posMax: parseFloat(posMax.text)
+                periodic: periodic.checked
                 numberOfParticles: parseInt(numberOfParticles.text)
             }
             statistics: [
@@ -92,10 +92,10 @@ Window {
                     currentIndex: 0
                     model: ListModel {
                         id: cbItems
+                        ListElement { text: "Void";}
                         ListElement { text: "Regular noise";}
                         ListElement { text: "Multifractal noise";}
                         ListElement { text: "Static model from file";}
-                        ListElement { text: "Void";}
                     }
                     width: 200
                     onCurrentIndexChanged: {
@@ -194,6 +194,14 @@ Window {
                     }
                     Row {
                         spacing: 5
+                        CheckBox {
+                            id: periodic
+                            text: "Periodic"
+                            checked: systemProperties.periodic
+                        }
+                    }
+                    Row {
+                        spacing: 5
                         Label {
                             text: "Step length: "
                         }
@@ -256,4 +264,3 @@ Window {
         maximumValue: 1
     }
 }
-
