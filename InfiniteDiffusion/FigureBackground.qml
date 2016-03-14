@@ -25,6 +25,7 @@ Rectangle {
         width: parent.width
         height: parent.height-20
         visible: figureBackground.height===figureBackground.fullHeight
+        lineGraphs: [graph]
         LineGraph {
             id: loaded
             figure: figure
@@ -34,6 +35,7 @@ Rectangle {
             }
             onDataSourceChanged: {
                 dataSource.updated.connect(function() {
+                    console.log("DS update")
                     figure.updateLimits()
                 })
             }

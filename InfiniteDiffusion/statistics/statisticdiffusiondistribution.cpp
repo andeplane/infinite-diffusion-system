@@ -35,7 +35,7 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
     points.push_front(QPointF(0,0)); // Add a 0,0 point to make graph look nicr
     setMean(gsl_histogram_mean(hist));
     setStandardDeviation(gsl_histogram_sigma(hist));
-
+    qDebug() << "Created histogram. Settings points...";
     m_dataSource->setPoints(points, true);
     gsl_histogram_free(hist);
 }
@@ -159,6 +159,7 @@ void StatisticDiffusionDistribution::tick(System *system)
 
     deltaT = system->time() - m_lastComputeTimestamp;
     if(deltaT >= m_timeBetweenComputing) {
+        qDebug() << "Computing";
         m_lastComputeTimestamp = system->time();
         compute();
     }
@@ -179,6 +180,7 @@ void StatisticDiffusionDistribution::reset()
     m_diffusionCoefficients.clear();
     m_dataSource->clear();
     m_lastSamplingTimestamp = 0;
+    m_lastComputeTimestamp = 0;
 }
 
 float StatisticDiffusionDistribution::fractionOfMaxDeltaTSampling() const

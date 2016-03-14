@@ -26,7 +26,9 @@ SOURCES += main.cpp \
     statistics/statisticdiffusiondistribution.cpp \
     datasource.cpp \
     nogui.cpp \
-    unittests.cpp
+    unittests.cpp \
+    GeometryLibrary/models/cylindermodel.cpp \
+    GeometryLibrary/models/voidmodel.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -70,7 +72,9 @@ HEADERS += \
     datasource.h \
     nogui.h \
     GeometryLibrary/misc/random.h \
-    catch.hpp
+    catch.hpp \
+    GeometryLibrary/models/cylindermodel.h \
+    GeometryLibrary/models/voidmodel.h
 
 DISTFILES += \
     GeometryLibrary/README.md

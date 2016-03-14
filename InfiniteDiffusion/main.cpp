@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
         qmlRegisterType<SystemProperties>("Diffusion", 1, 0, "SystemProperties");
         qmlRegisterType<StatisticDiffusionDistribution>("Diffusion",1,0,"StatisticDiffusionDistribution");
         qmlRegisterType<RegularNoiseModel>("GeometryLibrary", 1, 0, "RegularNoiseModel");
+        qmlRegisterType<CylinderModel>("GeometryLibrary", 1, 0, "CylinderModel");
+        qmlRegisterType<VoidModel>("GeometryLibrary", 1, 0, "VoidModel");
         qmlRegisterType<Octree>("GeometryLibrary", 1, 0, "OctreeModel");
         // qmlRegisterUncreatableType<Geometry>("Diffusion",1,0, "Geometry", "Abstract");
         qmlRegisterUncreatableType<Model>("GeometryLibrary",1,0, "Model", "Abstract");

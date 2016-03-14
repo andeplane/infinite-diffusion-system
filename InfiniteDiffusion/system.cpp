@@ -45,7 +45,6 @@ bool System::tick()
     Model *currentModel = m_properties->model();
     currentModel->start();
     for(Particle &particle : m_particles) {
-        QVector3D oldPosition = particle.position();
         QVector3D newPosition = particle.position();
 
         int moveDimension = m_random.nextInt(0,2);
@@ -82,7 +81,8 @@ QVector<QVector3D> System::particlePositions()
     QVector<QVector3D> positions;
     positions.reserve(m_particles.size());
     for(Particle &particle : m_particles) {
-        positions.push_back(particle.positionUnwrapped());
+        // positions.push_back(particle.positionUnwrapped());
+        positions.push_back(particle.position());
     }
     return positions;
 }

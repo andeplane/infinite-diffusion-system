@@ -25,8 +25,16 @@ Window {
         id: regularNoiseModel
     }
 
+    VoidModel {
+        id: voidModel
+    }
+
     OctreeModel {
         id: octreeModel
+    }
+
+    CylinderModel {
+        id: cylinderModel
     }
 
     StatisticDiffusionDistribution {
@@ -48,6 +56,7 @@ Window {
                 posMax: parseFloat(posMax.text)
                 periodic: periodic.checked
                 numberOfParticles: parseInt(numberOfParticles.text)
+                model: voidModel
             }
             statistics: [
                 statisticDiffusion
@@ -94,7 +103,7 @@ Window {
                         id: cbItems
                         ListElement { text: "Void";}
                         ListElement { text: "Regular noise";}
-                        ListElement { text: "Multifractal noise";}
+                        ListElement { text: "Cylinder";}
                         ListElement { text: "Static model from file";}
                     }
                     width: 200
@@ -103,6 +112,10 @@ Window {
                             systemProperties.model = regularNoiseModel
                         } else if(modelComboBox.currentText === "Static model from file") {
                             systemProperties.model = octreeModel
+                        } else if(modelComboBox.currentText === "Cylinder") {
+                            systemProperties.model = cylinderModel
+                        } else if(modelComboBox.currentText === "Void") {
+                            systemProperties.model = voidModel
                         }
                     }
                 }
