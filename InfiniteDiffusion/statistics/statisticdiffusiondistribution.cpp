@@ -35,7 +35,6 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
     points.push_front(QPointF(0,0)); // Add a 0,0 point to make graph look nicr
     setMean(gsl_histogram_mean(hist));
     setStandardDeviation(gsl_histogram_sigma(hist));
-    qDebug() << "Created histogram. Settings points...";
     m_dataSource->setPoints(points, true);
     gsl_histogram_free(hist);
 }

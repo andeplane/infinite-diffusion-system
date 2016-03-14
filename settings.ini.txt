@@ -1,0 +1,24 @@
+model = [void, cylinder, regularnoise, xyzfile]
+posmin = (float)
+posmax = (float)
+numberoftimesteps = (int)
+
+cylinder_radius = (float)
+cylinder_inverted = (bool)
+
+regularnoise_octaves = (int)
+regularnoise_scale = (float)
+regularnoise_persistence = (float)
+regularnoise_threshold = (float)
+regularnoise_inverted = (bool)
+regularnoise_seed = (float)
+regularnoise_absolute = (bool)
+regularnoise_skewscale = (float)
+regularnoise_skewamplitude = (float)
+regularnoise_noisetype = (string)
+
+xyzfile_file = (string)
+xyzfile_resolution = (int)
+xyzfile_threshold = (float)
+xyzfile_maxdistance = (float)
+
