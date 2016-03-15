@@ -78,7 +78,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Points *points = qobject_cast<Points*>(renderableObject);
     if(points) {
-        QVector<QVector3D> positions = m_system->particlePositions();
+        QVector<QVector3D> positions = m_system->particlePositionsUnwrapped();
         float deltaPos = (m_system->properties()->posMax() - m_system->properties()->posMin()) + m_system->properties()->posMin();
         QVector3D systemCenter(0.5*deltaPos,0.5*deltaPos,0.5*deltaPos);
 

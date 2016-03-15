@@ -1,4 +1,5 @@
 model = [void, cylinder, regularnoise, xyzfile]
+statistic = [diffusiondistribution]
 posmin = (float)
 posmax = (float)
 numberoftimesteps = (int)

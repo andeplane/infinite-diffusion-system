@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG -= app_bundle
+#CONFIG -= app_bundle
 CONFIG += c++11
 # DEFINES += RUNUNITTESTS
 QT += qml quick widgets opengl openglextensions charts

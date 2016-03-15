@@ -29,6 +29,7 @@ public:
     void update();
     void normalizeArea();
     void clear();
+    void save(QString filename);
 public slots:
     void setXValues(QVariantList xValues);
     void setYValues(QVariantList yValues);

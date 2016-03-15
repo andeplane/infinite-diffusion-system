@@ -1,5 +1,7 @@
 #include "datasource.h"
 #include <QDebug>
+#include <QFile>
+#include <QUrl>
 
 bool DataSource::isValid()
 {
@@ -103,6 +105,31 @@ void DataSource::clear()
 {
     m_xValuesRaw.clear();
     m_yValuesRaw.clear();
+}
+
+void DataSource::save(QString filename)
+{
+    if(!isValid()) {
+        qDebug() << "Could not save data source. x.size() != y.size(). Aborting!";
+        return;
+    }
+
+    QFile file(filename);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.setFileName(QUrl(filename).toLocalFile());
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qWarning() << "Could not open file "+filename;
+            return;
+        }
+    }
+
+    QTextStream out(&file);
+
+    for(int i=0; i<m_xValuesRaw.size(); i++) {
+        out << m_xValuesRaw[i] << " " << m_yValuesRaw[i] << "\n";
+    }
+    file.close();
 }
 
 void DataSource::update()

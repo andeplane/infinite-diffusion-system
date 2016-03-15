@@ -76,13 +76,13 @@ SystemProperties *System::properties() const
     return m_properties;
 }
 
-QVector<QVector3D> System::particlePositions()
+QVector<QVector3D> System::particlePositionsUnwrapped()
 {
     QVector<QVector3D> positions;
     positions.reserve(m_particles.size());
     for(Particle &particle : m_particles) {
-        // positions.push_back(particle.positionUnwrapped());
-        positions.push_back(particle.position());
+        positions.push_back(particle.positionUnwrapped());
+        // positions.push_back(particle.position());
     }
     return positions;
 }

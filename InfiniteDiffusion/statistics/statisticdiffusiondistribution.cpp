@@ -12,14 +12,14 @@ void StatisticDiffusionDistribution::addData(const QVector<QVector3D> &positions
     m_timesteps.push_back(new DiffusionDistributionData(positions, timestep));
 }
 
-void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoefficient, float largestDiffusionCoefficient)
+void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoefficient, float largestDiffusionCoefficient, DataSource& dataSource, QVector<float> &diffusionCoefficients)
 {
-    m_dataSource->clear();
-    if(m_diffusionCoefficients.size() == 0) return;
+    dataSource.clear();
+    if(diffusionCoefficients.size() == 0) return;
 
     gsl_histogram *hist = gsl_histogram_alloc (m_histogramBins);
     gsl_histogram_set_ranges_uniform (hist, smallestDiffusionCoefficient, largestDiffusionCoefficient);
-    for(const float &value : m_diffusionCoefficients) {
+    for(const float &value : diffusionCoefficients) {
         gsl_histogram_increment (hist, value);
     }
 
@@ -32,13 +32,26 @@ void StatisticDiffusionDistribution::computeHistogram(float smallestDiffusionCoe
         points[i].setX(middle);
         points[i].setY(gsl_histogram_get(hist,i));
     }
-    points.push_front(QPointF(0,0)); // Add a 0,0 point to make graph look nicr
+    // points.push_front(QPointF(0,0)); // Add a 0,0 point to make graph look nicr
     setMean(gsl_histogram_mean(hist));
     setStandardDeviation(gsl_histogram_sigma(hist));
-    m_dataSource->setPoints(points, true);
+    dataSource.setPoints(points, true);
     gsl_histogram_free(hist);
 }
 
+void StatisticDiffusionDistribution::computeTwoTimesteps(const QVector<QVector3D> &positions_i, const QVector<QVector3D> &positions_j, const float deltaT, QVector<float> &diffusionCoefficients) {
+    if(positions_i.size() != positions_j.size()) {
+        qFatal("Error in StatisticDiffusionDistribution::computeTwoTimesteps(). Two timesteps differ in number of particles.");
+    }
+
+    for(int particleIndex = 0; particleIndex < positions_j.size(); particleIndex++) {
+        const QVector3D &position_i = positions_i[particleIndex];
+        const QVector3D &position_j = positions_j[particleIndex];
+        const float rSquared = (position_i - position_j).lengthSquared();
+        const float diffusionCoefficient = rSquared / (6*deltaT);
+        diffusionCoefficients.push_back(diffusionCoefficient);
+    }
+}
 
 void StatisticDiffusionDistribution::compute()
 {
@@ -58,23 +71,16 @@ void StatisticDiffusionDistribution::compute()
             const float deltaT = timestamp_j - timestamp_i;
             if(deltaT < maxDeltaT*0.5) continue;
             const QVector<QVector3D> &positions_j = m_timesteps[j]->m_positions;
-            if(positions_i.size() != positions_j.size()) {
-                qFatal("Error in StatisticDiffusionDistribution::compute(). Two timesteps differ in number of timesteps");
-            }
-
-            for(int particleIndex = 0; particleIndex < positions_j.size(); particleIndex++) {
-                const QVector3D &position_i = positions_i[particleIndex];
-                const QVector3D &position_j = positions_j[particleIndex];
-                const float rSquared = (position_i - position_j).lengthSquared();
-                const float diffusionCoefficient = rSquared / (6*deltaT);
-                smallestDiffusionCoefficient = std::min(smallestDiffusionCoefficient, diffusionCoefficient);
-                largestDiffusionCoefficient = std::max(largestDiffusionCoefficient, diffusionCoefficient);
-                m_diffusionCoefficients.push_back(diffusionCoefficient);
-            }
+            computeTwoTimesteps(positions_i, positions_j, deltaT, m_diffusionCoefficients);
         }
     }
 
-    computeHistogram(smallestDiffusionCoefficient, largestDiffusionCoefficient);
+    for(const float &d : m_diffusionCoefficients) {
+        smallestDiffusionCoefficient = std::min(smallestDiffusionCoefficient, d);
+        largestDiffusionCoefficient = std::max(largestDiffusionCoefficient, d);
+    }
+
+    computeHistogram(smallestDiffusionCoefficient, largestDiffusionCoefficient, *m_dataSource, m_diffusionCoefficients);
 }
 
 float StatisticDiffusionDistribution::mean() const
@@ -146,13 +152,12 @@ int StatisticDiffusionDistribution::histogramBins() const
     return m_histogramBins;
 }
 
-
 void StatisticDiffusionDistribution::tick(System *system)
 {
     float deltaT = system->time() - m_lastSamplingTimestamp;
     if(deltaT >= m_timeBetweenSampling || system->time() == 0) {
         m_lastSamplingTimestamp = system->time();
-        auto particlePositions = system->particlePositions();
+        auto particlePositions = system->particlePositionsUnwrapped();
         addData(particlePositions, system->time());
     }
 

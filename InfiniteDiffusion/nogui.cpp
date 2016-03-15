@@ -1,5 +1,6 @@
 #include "nogui.h"
 #include "GeometryLibrary/models/models.h"
+#include "statistics/statistics.h"
 #include <QElapsedTimer>
 
 NoGUI::NoGUI(CIniFile *iniFile) :
@@ -31,6 +32,14 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         } else {
             qDebug() << "Error, could not find model in config file.";
             exit(1);
+        }
+
+        if(iniFile->find(QString("statistic"), QString("diffusiondistribution"))) {
+            qDebug() << "Adding statistic diffusiondistribution";
+            StatisticDiffusionDistribution *statistic = new StatisticDiffusionDistribution();
+            QString statisticFilename = QString::fromStdString(iniFile->getstring("statistic_filename"));
+            statistic->setFilename(statisticFilename);
+            system.statistics().append(QVariant::fromValue(statistic));
         }
 
         float posmin = iniFile->getdouble("posmin");

@@ -58,7 +58,6 @@ signals:
     void posMaxChanged(int posMax);
     void dtChanged(float dt);
     void modelChanged(Model* model);
-
     void periodicChanged(bool periodic);
 
 public:
@@ -88,7 +87,7 @@ public:
     // Getters and setters
     QVector<Particle> &particles() { return m_particles; }
     SystemProperties* properties() const;
-    QVector<QVector3D> particlePositions();
+    QVector<QVector3D> particlePositionsUnwrapped();
     float time() const;
     QVariantList statistics() const;
 

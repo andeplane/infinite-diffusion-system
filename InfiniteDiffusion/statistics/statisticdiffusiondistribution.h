@@ -29,6 +29,7 @@ class StatisticDiffusionDistribution : public Statistic
     Q_PROPERTY(float timeBetweenSampling READ timeBetweenSampling WRITE setTimeBetweenSampling NOTIFY timeBetweenSamplingChanged)
     Q_PROPERTY(float fractionOfMaxDeltaTSampling READ fractionOfMaxDeltaTSampling WRITE setFractionOfMaxDeltaTSampling NOTIFY fractionOfMaxDeltaTSamplingChanged)
     Q_PROPERTY(float timeBetweenComputing READ timeBetweenComputing WRITE setTimeBetweenComputing NOTIFY timeBetweenComputingChanged)
+
 private:
     QVector<DiffusionDistributionData*> m_timesteps;
     QVector<float> m_diffusionCoefficients;
@@ -44,7 +45,8 @@ private:
 public:
     StatisticDiffusionDistribution();
     void addData(const QVector<QVector3D> &positions, float timestep);
-    void computeHistogram(float smallestDiffusionCoefficient, float largestDiffusionCoefficient);
+    void computeHistogram(float smallestDiffusionCoefficient, float largestDiffusionCoefficient, DataSource &dataSource, QVector<float> &diffusionCoefficients);
+    void computeTwoTimesteps(const QVector<QVector3D> &positions_i, const QVector<QVector3D> &positions_j, const float deltaT, QVector<float> &diffusionCoefficients);
     int histogramBins() const;
     float mean() const;
     float standardDeviation() const;
