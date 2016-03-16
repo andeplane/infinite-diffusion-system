@@ -139,8 +139,8 @@ void System::setStatistics(QVariantList statistics)
 
 SystemProperties::~SystemProperties()
 {
-    if(m_model) delete m_model;
-    m_model = nullptr;
+//    if(m_model) delete m_model;
+//    m_model = nullptr;
 }
 
 float SystemProperties::stepLength() const

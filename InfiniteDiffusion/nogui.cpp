@@ -26,6 +26,10 @@ NoGUI::NoGUI(CIniFile *iniFile) :
             qDebug() << "Creating model: XYZModel";
             model = new XYZModel();
             model->loadParameters(iniFile);
+        } else if(iniFile->find(QString("model"), QString("octree"))) {
+            qDebug() << "Creating model: Octree";
+            model = new XYZModel();
+            model->loadParameters(iniFile);
         }
 
         if(model) {
