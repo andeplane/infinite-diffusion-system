@@ -37,11 +37,10 @@ Window {
         id: cylinderModel
     }
 
-    StatisticDiffusionDistribution {
-        id: statisticDiffusion
-        timeBetweenSampling: 100
-        histogramBins: 500
-        timeBetweenComputing: 200
+    MSDStatistic {
+        id: statisticMSD
+        measureEvery: 1
+        computeEvery: 1
     }
 
     MySimulator {
@@ -59,7 +58,7 @@ Window {
                 model: voidModel
             }
             statistics: [
-                statisticDiffusion
+                statisticMSD
             ]
         }
     }

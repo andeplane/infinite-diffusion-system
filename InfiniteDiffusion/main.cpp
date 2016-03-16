@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         qmlRegisterType<MySimulator>("MySimulator", 1, 0, "MySimulator");
         qmlRegisterType<System>("Diffusion", 1, 0, "System");
         qmlRegisterType<SystemProperties>("Diffusion", 1, 0, "SystemProperties");
-        qmlRegisterType<StatisticDiffusionDistribution>("Diffusion",1,0,"StatisticDiffusionDistribution");
+        qmlRegisterType<MSDStatistic>("Diffusion",1,0,"MSDStatistic");
         qmlRegisterType<RegularNoiseModel>("GeometryLibrary", 1, 0, "RegularNoiseModel");
         qmlRegisterType<CylinderModel>("GeometryLibrary", 1, 0, "CylinderModel");
         qmlRegisterType<VoidModel>("GeometryLibrary", 1, 0, "VoidModel");

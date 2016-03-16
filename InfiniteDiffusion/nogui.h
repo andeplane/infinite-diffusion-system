@@ -8,7 +8,6 @@ private:
     CIniFile *m_iniFile;
     int m_timesteps;
 public:
-    SystemProperties systemProperties;
     System system;
 
     NoGUI(CIniFile *iniFile);

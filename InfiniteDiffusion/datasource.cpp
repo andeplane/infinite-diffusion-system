@@ -73,7 +73,6 @@ void DataSource::setPoints(const QVector<QPointF> &points, bool normalized)
     if(normalized) {
         normalizeArea();
     }
-    qDebug() << "did set points. updating";
     update();
 }
 
@@ -112,6 +111,8 @@ void DataSource::save(QString filename)
     if(!isValid()) {
         qDebug() << "Could not save data source. x.size() != y.size(). Aborting!";
         return;
+    } else {
+        qDebug() << "Saving statistic to file " << filename;
     }
 
     QFile file(filename);
@@ -148,7 +149,6 @@ void DataSource::update()
         m_xValues.push_back(QVariant::fromValue<float>(m_xValuesRaw[i]));
         m_yValues.push_back(QVariant::fromValue<float>(m_yValuesRaw[i]));
     }
-    qDebug() << "Updating DS IN cpp";
 
     emit updated();
 }

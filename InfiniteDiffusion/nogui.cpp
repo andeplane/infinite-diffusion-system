@@ -7,7 +7,8 @@ NoGUI::NoGUI(CIniFile *iniFile) :
     m_iniFile(iniFile)
 {
     try {
-        system.setProperties(&systemProperties);
+        SystemProperties *systemProperties = new SystemProperties();
+        system.setProperties(systemProperties);
         Model *model = nullptr;
         if(iniFile->find(QString("model"), QString("void"))) {
             qDebug() << "Creating model: VoidModel";
@@ -28,15 +29,20 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         }
 
         if(model) {
-            systemProperties.setModel(model);
+            systemProperties->setModel(model);
         } else {
             qDebug() << "Error, could not find model in config file.";
             exit(1);
         }
 
-        if(iniFile->find(QString("statistic"), QString("diffusiondistribution"))) {
-            qDebug() << "Adding statistic diffusiondistribution";
-            StatisticDiffusionDistribution *statistic = new StatisticDiffusionDistribution();
+        if(iniFile->find(QString("statistic"), QString("msd"))) {
+            qDebug() << "Adding msd statistic";
+
+            MSDStatistic *statistic = new MSDStatistic();
+            float sampleStatisticEvery = iniFile->getdouble("statistic_sampleevery");
+            statistic->setMeasureEvery(sampleStatisticEvery);
+            statistic->setComputeEvery(100000000);
+
             QString statisticFilename = QString::fromStdString(iniFile->getstring("statistic_filename"));
             statistic->setFilename(statisticFilename);
             system.statistics().append(QVariant::fromValue(statistic));
@@ -54,11 +60,11 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         qDebug() << "Settings numberofparticles: " << numberOfParticles;
         m_timesteps = iniFile->getint("numberoftimesteps");
 
-        systemProperties.setPosMax(posmax);
-        systemProperties.setPosMin(posmin);
-        systemProperties.setNumberOfParticles(numberOfParticles);
-        systemProperties.setStepLength(steplength);
-        systemProperties.setDt(dt);
+        systemProperties->setPosMax(posmax);
+        systemProperties->setPosMin(posmin);
+        systemProperties->setNumberOfParticles(numberOfParticles);
+        systemProperties->setStepLength(steplength);
+        systemProperties->setDt(dt);
     } catch (string error) {
         cout << "Error: " << error;
     }
@@ -80,4 +86,6 @@ void NoGUI::run()
             qDebug() << "Timestep " << timestep << " of " << m_timesteps << ". Time per timestep: " << timePerTimestep*1000 << " ms and expected time remaining: " << expectedTimeLeft << " s.";
         }
     }
+
+    qDebug() << "Simulation finished after " << timer.elapsed() / 1000.  << " seconds.";
 }

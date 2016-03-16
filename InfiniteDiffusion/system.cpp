@@ -22,6 +22,16 @@ System::System()
 
 }
 
+System::~System()
+{
+    for(QVariant &obj : m_statistics) {
+        Statistic *statistic = obj.value<Statistic*>();
+        delete statistic;
+    }
+    m_statistics.clear();
+    delete m_properties;
+}
+
 bool System::tick()
 {
     if(!m_properties->model()) return false;
@@ -30,6 +40,7 @@ bool System::tick()
         m_properties->model()->start();
         m_properties->setWillReset(false);
         m_time = 0;
+        qDebug() << "Creating particles...";
         createParticles(m_properties->numberOfParticles(), m_properties->posMin(), m_properties->posMax());
 
         for(QVariant &obj : m_statistics) {
@@ -47,8 +58,9 @@ bool System::tick()
     for(Particle &particle : m_particles) {
         QVector3D newPosition = particle.position();
 
-        int moveDimension = m_random.nextInt(0,2);
-        double step = (1.0 - 2.0*m_random.nextBool())*m_properties->stepLength();
+        int moveDimension = Random::nextInt(0,2);
+        // double step = (1.0 - 2.0*m_random.nextBool())*m_properties->stepLength();
+        double step = Random::nextGaussian(0, m_properties->stepLength());
         newPosition[moveDimension] += step;
 
         if(m_properties->periodic()) applyPeriodic(newPosition);
@@ -91,7 +103,8 @@ float System::time() const
 {
     return m_time;
 }
-QVariantList System::statistics() const
+
+QVariantList &System::statistics()
 {
     return m_statistics;
 }
@@ -122,6 +135,12 @@ void System::setStatistics(QVariantList statistics)
 
     m_statistics = statistics;
     emit statisticsChanged(statistics);
+}
+
+SystemProperties::~SystemProperties()
+{
+    if(m_model) delete m_model;
+    m_model = nullptr;
 }
 
 float SystemProperties::stepLength() const
@@ -167,7 +186,7 @@ void System::createParticles(int numberOfParticles, float from, float to)
     for(Particle &particle : m_particles) {
         bool isInVoid = false;
         while(!isInVoid) {
-            particle.setPosition(m_random.nextQVector3D(from,to));
+            particle.setPosition(Random::nextQVector3D(from,to));
             particle.setPositionUnwrapped(particle.position());
             isInVoid = currentModel->isInVoid(particle.position());
         }

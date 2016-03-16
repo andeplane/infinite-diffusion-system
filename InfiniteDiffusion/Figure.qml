@@ -25,7 +25,6 @@ ChartView {
             ymin = Math.min(lineGraph.dataSource.yMin(), ymin)
             ymax = Math.max(lineGraph.dataSource.yMax(), ymax)
         }
-        console.log("New limits: "+xmin+", "+xmax+"  "+ymin+", "+ymax)
         _axisX.min = xmin*0.9
         _axisX.max = xmax*1.1
         _axisY.min = ymin*0.9

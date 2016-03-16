@@ -19,7 +19,6 @@ class SystemProperties : public QObject
     Q_PROPERTY(int posMax READ posMax WRITE setPosMax NOTIFY posMaxChanged)
     Q_PROPERTY(bool periodic READ periodic WRITE setPeriodic NOTIFY periodicChanged)
 private:
-
     Model* m_model = nullptr;
     float m_stepLength = 0.0;
     bool m_willReset = false;
@@ -30,13 +29,13 @@ private:
     bool m_periodic = true;
 
 public:
+    ~SystemProperties();
     float stepLength() const;
     bool willReset() const;
     int numberOfParticles() const;
     int posMin() const;
     int posMax() const;
     float dt() const;
-
     Model* model() const;
 
 public slots:
@@ -74,13 +73,13 @@ class System : public QObject
 private:
     QVector<Particle> m_particles;
     SystemProperties* m_properties = nullptr;
-    Random m_random;
     float m_time = 0;
     QVariantList m_statistics;
     void applyPeriodic(QVector3D &position);
 
 public:
     System();
+    ~System();
     bool tick();
     Q_INVOKABLE void createParticles(int numberOfParticles, float from, float to);
 
@@ -89,7 +88,7 @@ public:
     SystemProperties* properties() const;
     QVector<QVector3D> particlePositionsUnwrapped();
     float time() const;
-    QVariantList statistics() const;
+    QVariantList &statistics();
 
 public slots:
     void setProperties(SystemProperties* properties);

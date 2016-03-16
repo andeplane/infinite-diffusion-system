@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     nogui.cpp \
     unittests.cpp \
     GeometryLibrary/models/cylindermodel.cpp \
-    GeometryLibrary/models/voidmodel.cpp
+    GeometryLibrary/models/voidmodel.cpp \
+    statistics/msdstatistic.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -75,7 +76,8 @@ HEADERS += \
     GeometryLibrary/misc/random.h \
     catch.hpp \
     GeometryLibrary/models/cylindermodel.h \
-    GeometryLibrary/models/voidmodel.h
+    GeometryLibrary/models/voidmodel.h \
+    statistics/msdstatistic.h
 
 DISTFILES += \
     GeometryLibrary/README.md

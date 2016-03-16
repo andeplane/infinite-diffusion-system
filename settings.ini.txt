@@ -1,5 +1,9 @@
 model = [void, cylinder, regularnoise, xyzfile]
-statistic = [diffusiondistribution]
+statistic = [msd]
+statistic_filename = (string)
+statistic_sampleevery = (float)
+
+periodic = (bool)
 posmin = (float)
 posmax = (float)
 numberoftimesteps = (int)

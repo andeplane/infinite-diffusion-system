@@ -35,7 +35,6 @@ Rectangle {
             }
             onDataSourceChanged: {
                 dataSource.updated.connect(function() {
-                    console.log("DS update")
                     figure.updateLimits()
                 })
             }
@@ -43,7 +42,7 @@ Rectangle {
         LineGraph {
             id: graph
             figure: figure
-            dataSource: statisticDiffusion.dataSource
+            dataSource: statisticMSD.dataSource
             onDataSourceChanged: {
                 dataSource.updated.connect(function() {
                     figure.updateLimits()
@@ -61,17 +60,11 @@ Rectangle {
         Row {
             spacing: 10
             Label {
-                text: "Diffusion mean: "+statisticDiffusion.mean.toFixed(3)
-            }
-            Label {
                 text: "Time: "+simulator.time
             }
         }
         Row {
             spacing: 10
-            Label {
-                text: "Diffusion sigma: "+statisticDiffusion.standardDeviation.toFixed(3)
-            }
             Label {
                 text: "Time per timestep [ms]: "+simulator.timePerTimestep.toFixed(3)
             }
