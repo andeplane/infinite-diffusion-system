@@ -10,6 +10,5 @@
         <file>ParameterTextfield.qml</file>
         <file>ParameterSwitch.qml</file>
         <file>OctreeControl.qml</file>
-        <file>sio2_bulk.xyz</file>
     </qresource>
 </RCC>

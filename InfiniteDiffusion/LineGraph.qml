@@ -1,7 +1,7 @@
 import QtQuick 2.5
 import QtCharts 2.0
 import DataSource 1.0
-
+import QtQuick.Controls 1.4
 LineSeries {
     id: lineSeriesRoot
     property DataSource dataSource
@@ -18,9 +18,16 @@ LineSeries {
             var y = dataSource.yValues[i]
             append(x,y)
         }
+
         if(figure != undefined) {
             figure.updateLimits()
         }
+
+        var t = dataSource.xValues[dataSource.xValues.length-1]
+        var msd = dataSource.yValues[dataSource.yValues.length-1]
+        console.log("New point: "+t+" "+msd)
+        var D = msd / (6*t)
+        if(figure != null) figure.labelText = "D = "+D.toFixed(5)
     }
 
     onFigureChanged: {

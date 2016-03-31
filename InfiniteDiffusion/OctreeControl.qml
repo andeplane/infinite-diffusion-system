@@ -43,7 +43,7 @@ Row {
                 console.log("File chosen: "+fileDialogOpen.fileUrls.toString())
                 model.setFile(fileDialogOpen.fileUrls.toString())
                 model.readFile()
-                model.removeCylinder(0.25);
+                // model.removeCylinder(0.25);
                 model.buildTree(true);
             } else if(mode==="loadoctree") {
                 model.loadOctree(fileDialogOpen.fileUrls.toString())

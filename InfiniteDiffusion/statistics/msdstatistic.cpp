@@ -53,7 +53,6 @@ void MSDStatistic::compute()
 
     m_dataSource->clear();
     m_dataSource->setPoints(points);
-    m_dataSource->update();
 
 //    int numberOfParticles = m_data.front()->positions.size();
 //    QVector<float> msdValues;

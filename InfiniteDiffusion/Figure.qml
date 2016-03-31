@@ -9,7 +9,7 @@ ChartView {
     property alias axisX: _axisX
     property alias axisY: _axisY
     property var lineGraphs: []
-
+    property alias labelText: bottomLabel.text
     antialiasing: true
     legend.visible: false
 
@@ -43,5 +43,11 @@ ChartView {
         tickCount: 5
         min: 0
         max: 1
+    }
+
+    Label {
+        id: bottomLabel
+        anchors.bottom: parent.bottom
+        text: ""
     }
 }

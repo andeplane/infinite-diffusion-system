@@ -45,7 +45,9 @@ Rectangle {
             dataSource: statisticMSD.dataSource
             onDataSourceChanged: {
                 dataSource.updated.connect(function() {
-                    figure.updateLimits()
+                    if(figure != undefined) {
+                        figure.updateLimits()
+                    }
                 })
             }
         }

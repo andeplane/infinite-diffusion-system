@@ -28,15 +28,36 @@ NoGUI::NoGUI(CIniFile *iniFile) :
             model->loadParameters(iniFile);
         } else if(iniFile->find(QString("model"), QString("octree"))) {
             qDebug() << "Creating model: Octree";
-            model = new XYZModel();
+            model = new Octree();
             model->loadParameters(iniFile);
         }
+
 
         if(model) {
             systemProperties->setModel(model);
         } else {
             qDebug() << "Error, could not find model in config file.";
             exit(1);
+        }
+
+        if(iniFile->find(QString("cut_noise"), true)) {
+            qDebug() << "Cutting noise";
+            RegularNoiseModel *noiseModel = new RegularNoiseModel();
+            noiseModel->parameters()->load(QString::fromStdString((iniFile->getstring("noise_properties_filename"))));
+
+            Octree *octreeModel = qobject_cast<Octree*>(model);
+            XYZModel *xyzModel = qobject_cast<XYZModel*>(model);
+            if(octreeModel) {
+                qDebug() << "Removing from model";
+                octreeModel->removeFromModel(noiseModel);
+                qDebug() << "Building octree";
+                octreeModel->buildTree(true);
+            } else if(xyzModel) {
+                qDebug() << "Removing from model";
+                xyzModel->removeFromModel(noiseModel);
+                qDebug() << "Updating distance to atom field";
+                xyzModel->updateDistanceToAtomField();
+            }
         }
 
         if(iniFile->find(QString("statistic"), QString("msd"))) {

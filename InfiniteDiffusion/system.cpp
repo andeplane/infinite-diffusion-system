@@ -183,6 +183,10 @@ void System::createParticles(int numberOfParticles, float from, float to)
     if(!m_properties) return;
     m_particles.resize(numberOfParticles);
     Model *currentModel = m_properties->m_model;
+//    QVector3D startPos;
+//    while(true) {
+
+//    }
     for(Particle &particle : m_particles) {
         bool isInVoid = false;
         while(!isInVoid) {
