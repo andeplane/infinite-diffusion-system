@@ -52,7 +52,7 @@ Rectangle {
             }
         }
     }
-    
+
     Column {
         anchors.left: parent.left
         anchors.top: parent.top

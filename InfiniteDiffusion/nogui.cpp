@@ -3,6 +3,23 @@
 #include "statistics/statistics.h"
 #include <QElapsedTimer>
 
+void NoGUI::readNoiseParameters(CIniFile *iniFile, RegularNoiseModel *noiseModel) {
+    if(QString::fromStdString((iniFile->getstring("noise_properties_filename"))).isEmpty()) {
+        noiseModel->parameters()->setValue("octaves", iniFile->getdouble("noise_octaves"));
+        noiseModel->parameters()->setValue("scale", iniFile->getdouble("noise_scale"));
+        noiseModel->parameters()->setValue("persistence", iniFile->getdouble("noise_persistence"));
+        noiseModel->parameters()->setValue("threshold", iniFile->getdouble("noise_threshold"));
+        noiseModel->parameters()->setValue("inverted", iniFile->getbool("noise_inverted"));
+        noiseModel->parameters()->setValue("seed", iniFile->getdouble("noise_seed"));
+        noiseModel->parameters()->setValue("absolute", iniFile->getbool("noise_absolute"));
+        noiseModel->parameters()->setValue("skewscale", iniFile->getdouble("noise_skewscale"));
+        noiseModel->parameters()->setValue("skewamplitude", iniFile->getdouble("noise_skewamplitude"));
+        noiseModel->parameters()->getParameter("noisetype")->setString(QString::fromStdString((iniFile->getstring("noise_noisetype"))));
+    } else {
+        noiseModel->parameters()->load(QString::fromStdString((iniFile->getstring("noise_properties_filename"))));
+    }
+}
+
 NoGUI::NoGUI(CIniFile *iniFile) :
     m_iniFile(iniFile)
 {
@@ -17,7 +34,8 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         } else if(iniFile->find(QString("model"), QString("regularnoise"))) {
             qDebug() << "Creating model: RegularNoiseModel";
             model = new RegularNoiseModel();
-            model->loadParameters(iniFile);
+            RegularNoiseModel *noiseModel = qobject_cast<RegularNoiseModel *>(model);
+            readNoiseParameters(iniFile, noiseModel);
         } else if(iniFile->find(QString("model"), QString("cylinder"))) {
             qDebug() << "Creating model: CylinderModel";
             model = new CylinderModel();
@@ -43,7 +61,7 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         if(iniFile->find(QString("cut_noise"), true)) {
             qDebug() << "Cutting noise";
             RegularNoiseModel *noiseModel = new RegularNoiseModel();
-            noiseModel->parameters()->load(QString::fromStdString((iniFile->getstring("noise_properties_filename"))));
+            readNoiseParameters(iniFile, noiseModel);
 
             Octree *octreeModel = qobject_cast<Octree*>(model);
             XYZModel *xyzModel = qobject_cast<XYZModel*>(model);

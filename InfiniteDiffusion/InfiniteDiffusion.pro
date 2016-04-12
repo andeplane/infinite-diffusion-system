@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     unittests.cpp \
     GeometryLibrary/models/cylindermodel.cpp \
     GeometryLibrary/models/voidmodel.cpp \
-    statistics/msdstatistic.cpp
+    statistics/msdstatistic.cpp \
+    GeometryLibrary/logger.cpp
 
 
 INCLUDEPATH += /usr/local/include
@@ -77,7 +78,8 @@ HEADERS += \
     catch.hpp \
     GeometryLibrary/models/cylindermodel.h \
     GeometryLibrary/models/voidmodel.h \
-    statistics/msdstatistic.h
+    statistics/msdstatistic.h \
+    GeometryLibrary/logger.h
 
 DISTFILES += \
     GeometryLibrary/README.md

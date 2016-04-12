@@ -183,17 +183,30 @@ void System::createParticles(int numberOfParticles, float from, float to)
     if(!m_properties) return;
     m_particles.resize(numberOfParticles);
     Model *currentModel = m_properties->m_model;
-//    QVector3D startPos;
-//    while(true) {
+#ifdef STARTMIDDLE
+    float delta = to - from;
+    float boxMiddle = from + delta*0.5;
 
-//    }
+    QVector3D startPos(boxMiddle, boxMiddle, boxMiddle);
+
+    while(!currentModel->isInVoid(startPos)) {
+        startPos[0] += Random::nextFloat(-1, 1);
+        startPos[1] += Random::nextFloat(-1, 1);
+        startPos[2] += Random::nextFloat(-1, 1);
+    }
+#endif
     for(Particle &particle : m_particles) {
+#ifdef STARTMIDDLE
+        particle.setPosition(startPos);
+        particle.setPositionUnwrapped(startPos);
+#else
         bool isInVoid = false;
         while(!isInVoid) {
             particle.setPosition(Random::nextQVector3D(from,to));
             particle.setPositionUnwrapped(particle.position());
             isInVoid = currentModel->isInVoid(particle.position());
         }
+#endif
     }
 }
 

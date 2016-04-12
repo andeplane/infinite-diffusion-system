@@ -83,6 +83,11 @@ Window {
         anchors.top: parent.top
         radius: 10
 
+        MouseArea {
+            anchors.fill: parent
+            drag.target: parent
+        }
+
         Column {
             id: settingsColumn
             spacing: 10

@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
             iniFilename = QString(argv[2]);
         }
         CIniFile iniFile;
+        qDebug() << "Loading ini file: " << iniFilename;
         iniFile.load(iniFilename.toStdString());
         NoGUI noGUI(&iniFile);
         noGUI.run();

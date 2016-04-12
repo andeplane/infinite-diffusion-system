@@ -7,6 +7,7 @@ class NoGUI
 private:
     CIniFile *m_iniFile;
     int m_timesteps;
+    void readNoiseParameters(CIniFile *iniFile, RegularNoiseModel *noiseModel);
 public:
     System system;
 
