@@ -16,7 +16,7 @@ public:
     bool active() const;
     void setActive(bool active);
     QVector3D &position();
-    QVector3D position() const;
+    QVector3D mirroredPosition(QVector3D systemSize);
     void setPosition(const QVector3D &position);
     QVector3D positionUnwrapped() const;
     void setPositionUnwrapped(const QVector3D &positionUnwrapped);

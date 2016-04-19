@@ -32,19 +32,23 @@ void Particle::addPositionComponent(int dimension, float delta)
     m_positionUnwrapped[dimension] += delta;
 }
 
-QVector3D Particle::position() const
+QVector3D &Particle::position()
 {
     return m_position;
+}
+
+QVector3D Particle::mirroredPosition(QVector3D systemSize)
+{
+    QVector3D mirroredPosition = m_position;
+    for(int i=0; i<3; i++) {
+        if(mirroredPosition[i] > 0.5*systemSize[i]) mirroredPosition[i] = systemSize[i] - mirroredPosition[i];
+    }
+    return mirroredPosition;
 }
 
 void Particle::setPosition(const QVector3D &position)
 {
     m_position = position;
-}
-
-QVector3D &Particle::position()
-{
-    return m_position;
 }
 
 bool Particle::active() const

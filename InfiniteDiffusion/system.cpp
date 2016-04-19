@@ -1,6 +1,6 @@
 #include "system.h"
 #include <QDebug>
-
+// #define STARTMIDDLE
 void System::applyPeriodic(QVector3D &pos)
 {
     const float posMin = m_properties->posMin();
@@ -53,6 +53,7 @@ bool System::tick()
         return false;
     }
 
+    QVector3D systemSize(m_properties->posMax(), m_properties->posMax(), m_properties->posMax());
     Model *currentModel = m_properties->model();
     currentModel->start();
     for(Particle &particle : m_particles) {
@@ -64,11 +65,29 @@ bool System::tick()
         newPosition[moveDimension] += step;
 
         if(m_properties->periodic()) applyPeriodic(newPosition);
-
+        if(m_properties->m_mirrored) {
+            newPosition = mirroredPosition(newPosition);
+        }
         if(currentModel->isInVoid(newPosition)) {
             // Accept, still in void
             particle.addPositionComponent(moveDimension, step);
             if(m_properties->periodic()) applyPeriodic(particle.position());
+        }
+    }
+
+    if(m_properties->periodic()) {
+        float minP = 1000;
+        float maxP = -1000;
+        for(Particle &particle : m_particles) {
+            QVector3D &p = particle.position();
+            for(int i=0; i<3; i++) {
+                minP = std::min(minP, p[i]);
+                maxP = std::max(maxP, p[i]);
+                if(p[i] < m_properties->posMin() || p[i] > m_properties->posMax()) {
+                    qDebug() << "Warning, even with periodic boundary conditions, a particle is outside...";
+                    exit(1);
+                }
+            }
         }
     }
 
@@ -95,6 +114,17 @@ QVector<QVector3D> System::particlePositionsUnwrapped()
     for(Particle &particle : m_particles) {
         positions.push_back(particle.positionUnwrapped());
         // positions.push_back(particle.position());
+    }
+    return positions;
+}
+
+QVector<QVector3D> System::particlePositions()
+{
+    QVector<QVector3D> positions;
+    positions.reserve(m_particles.size());
+    for(Particle &particle : m_particles) {
+        // positions.push_back(particle.positionUnwrapped());
+        positions.push_back(particle.position());
     }
     return positions;
 }
@@ -135,6 +165,14 @@ void System::setStatistics(QVariantList statistics)
 
     m_statistics = statistics;
     emit statisticsChanged(statistics);
+}
+
+QVector3D System::mirroredPosition(QVector3D position)
+{
+    if(position[0] > 0.5*m_properties->posMax()) position[0] = m_properties->posMax() - position[0];
+    if(position[1] > 0.5*m_properties->posMax()) position[1] = m_properties->posMax() - position[1];
+    if(position[2] > 0.5*m_properties->posMax()) position[2] = m_properties->posMax() - position[2];
+    return position;
 }
 
 SystemProperties::~SystemProperties()
@@ -183,30 +221,24 @@ void System::createParticles(int numberOfParticles, float from, float to)
     if(!m_properties) return;
     m_particles.resize(numberOfParticles);
     Model *currentModel = m_properties->m_model;
-#ifdef STARTMIDDLE
-    float delta = to - from;
-    float boxMiddle = from + delta*0.5;
-
-    QVector3D startPos(boxMiddle, boxMiddle, boxMiddle);
-
-    while(!currentModel->isInVoid(startPos)) {
-        startPos[0] += Random::nextFloat(-1, 1);
-        startPos[1] += Random::nextFloat(-1, 1);
-        startPos[2] += Random::nextFloat(-1, 1);
-    }
-#endif
     for(Particle &particle : m_particles) {
-#ifdef STARTMIDDLE
-        particle.setPosition(startPos);
-        particle.setPositionUnwrapped(startPos);
-#else
         bool isInVoid = false;
+        int count = 0;
+        int maxCount = 1e6;
         while(!isInVoid) {
-            particle.setPosition(Random::nextQVector3D(from,to));
+            QVector3D newPosition = Random::nextQVector3D(from, to);
+
+            particle.setPosition(newPosition);
             particle.setPositionUnwrapped(particle.position());
-            isInVoid = currentModel->isInVoid(particle.position());
+            if(m_properties->m_mirrored) {
+                newPosition = mirroredPosition(newPosition);
+            }
+            isInVoid = currentModel->isInVoid(newPosition);
+            if(count++ > maxCount) {
+                qDebug() << "Error in System::createParticles. Too many trials, aborting!";
+                exit(1);
+            }
         }
-#endif
     }
 }
 
@@ -282,7 +314,21 @@ void SystemProperties::setPeriodic(bool periodic)
     emit periodicChanged(periodic);
 }
 
+void SystemProperties::setMirrored(bool mirrored)
+{
+    if (m_mirrored == mirrored)
+        return;
+
+    m_mirrored = mirrored;
+    emit mirroredChanged(mirrored);
+}
+
 bool SystemProperties::periodic() const
 {
     return m_periodic;
+}
+
+bool SystemProperties::mirrored() const
+{
+    return m_mirrored;
 }

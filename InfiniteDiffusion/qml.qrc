@@ -10,5 +10,7 @@
         <file>ParameterTextfield.qml</file>
         <file>ParameterSwitch.qml</file>
         <file>OctreeControl.qml</file>
+        <file>MainSimple.qml</file>
+        <file>main_nogui.qml</file>
     </qresource>
 </RCC>

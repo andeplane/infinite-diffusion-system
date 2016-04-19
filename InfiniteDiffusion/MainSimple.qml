@@ -13,36 +13,6 @@ Window {
     width: 1024
     height: 768
 
-    Settings {
-        property alias lastFileDialogOpenFolder: fileDialogOpen.folder
-        property alias lastFileDialogSaveFolder: fileDialogSave.folder
-        property alias lastParametersFile: paramLoad.previous
-        property alias posMin: posMin.text
-        property alias posMax: posMax.text
-    }
-
-    RegularNoiseModel {
-        id: regularNoiseModel
-    }
-
-    VoidModel {
-        id: voidModel
-    }
-
-    OctreeModel {
-        id: octreeModel
-    }
-
-    CylinderModel {
-        id: cylinderModel
-    }
-
-    MSDStatistic {
-        id: statisticMSD
-        measureEvery: 1
-        computeEvery: 1
-    }
-
     MySimulator {
         id: simulator
         octree: octreeModel

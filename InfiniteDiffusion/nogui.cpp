@@ -3,23 +3,6 @@
 #include "statistics/statistics.h"
 #include <QElapsedTimer>
 
-void NoGUI::readNoiseParameters(CIniFile *iniFile, RegularNoiseModel *noiseModel) {
-    if(QString::fromStdString((iniFile->getstring("noise_properties_filename"))).isEmpty()) {
-        noiseModel->parameters()->setValue("octaves", iniFile->getdouble("noise_octaves"));
-        noiseModel->parameters()->setValue("scale", iniFile->getdouble("noise_scale"));
-        noiseModel->parameters()->setValue("persistence", iniFile->getdouble("noise_persistence"));
-        noiseModel->parameters()->setValue("threshold", iniFile->getdouble("noise_threshold"));
-        noiseModel->parameters()->setValue("inverted", iniFile->getbool("noise_inverted"));
-        noiseModel->parameters()->setValue("seed", iniFile->getdouble("noise_seed"));
-        noiseModel->parameters()->setValue("absolute", iniFile->getbool("noise_absolute"));
-        noiseModel->parameters()->setValue("skewscale", iniFile->getdouble("noise_skewscale"));
-        noiseModel->parameters()->setValue("skewamplitude", iniFile->getdouble("noise_skewamplitude"));
-        noiseModel->parameters()->getParameter("noisetype")->setString(QString::fromStdString((iniFile->getstring("noise_noisetype"))));
-    } else {
-        noiseModel->parameters()->load(QString::fromStdString((iniFile->getstring("noise_properties_filename"))));
-    }
-}
-
 NoGUI::NoGUI(CIniFile *iniFile) :
     m_iniFile(iniFile)
 {
@@ -50,32 +33,11 @@ NoGUI::NoGUI(CIniFile *iniFile) :
             model->loadParameters(iniFile);
         }
 
-
         if(model) {
             systemProperties->setModel(model);
         } else {
             qDebug() << "Error, could not find model in config file.";
             exit(1);
-        }
-
-        if(iniFile->find(QString("cut_noise"), true)) {
-            qDebug() << "Cutting noise";
-            RegularNoiseModel *noiseModel = new RegularNoiseModel();
-            readNoiseParameters(iniFile, noiseModel);
-
-            Octree *octreeModel = qobject_cast<Octree*>(model);
-            XYZModel *xyzModel = qobject_cast<XYZModel*>(model);
-            if(octreeModel) {
-                qDebug() << "Removing from model";
-                octreeModel->removeFromModel(noiseModel);
-                qDebug() << "Building octree";
-                octreeModel->buildTree(true);
-            } else if(xyzModel) {
-                qDebug() << "Removing from model";
-                xyzModel->removeFromModel(noiseModel);
-                qDebug() << "Updating distance to atom field";
-                xyzModel->updateDistanceToAtomField();
-            }
         }
 
         if(iniFile->find(QString("statistic"), QString("msd"))) {
@@ -101,12 +63,18 @@ NoGUI::NoGUI(CIniFile *iniFile) :
         qDebug() << "Settings dt: " << dt;
         int numberOfParticles = iniFile->getint("numberofparticles");
         qDebug() << "Settings numberofparticles: " << numberOfParticles;
+        bool periodic = iniFile->getbool("periodic");
+        qDebug() << "Settings periodic: " << periodic;
+        bool mirrored = iniFile->getbool("mirrored");
+        qDebug() << "Settings mirrored: " << mirrored;
         m_timesteps = iniFile->getint("numberoftimesteps");
 
         systemProperties->setPosMax(posmax);
         systemProperties->setPosMin(posmin);
         systemProperties->setNumberOfParticles(numberOfParticles);
         systemProperties->setStepLength(steplength);
+        systemProperties->setPeriodic(periodic);
+        systemProperties->setMirrored(mirrored);
         systemProperties->setDt(dt);
     } catch (string error) {
         cout << "Error: " << error;
@@ -114,20 +82,29 @@ NoGUI::NoGUI(CIniFile *iniFile) :
     system.properties()->setWillReset(true);
 }
 
+bool NoGUI::tick() {
+    m_currentTimestep++;
+    bool didTick = system.tick();
+    if(!timer.isValid()) timer.start();
+
+    if(m_currentTimestep % 100 == 0) {
+        double elapsedTime = timer.elapsed() / 1000.;
+        double timePerTimestep = elapsedTime / m_currentTimestep;
+        int timestepsLeft = m_timesteps - m_currentTimestep;
+        double expectedTimeLeft = timestepsLeft*timePerTimestep;
+
+        qDebug() << "Timestep " << m_currentTimestep << " of " << m_timesteps << ". Time per timestep: " << timePerTimestep*1000 << " ms and expected time remaining: " << expectedTimeLeft << " s.";
+    }
+    if(m_currentTimestep == m_timesteps) {
+        finished = true;
+    }
+    return didTick;
+}
+
 void NoGUI::run()
 {
-    QElapsedTimer timer;
-    timer.start();
     for(int timestep=1; timestep<=m_timesteps; timestep++) {
-        system.tick();
-        if(timestep % 100 == 0) {
-            double elapsedTime = timer.elapsed() / 1000.;
-            double timePerTimestep = elapsedTime / timestep;
-            int timestepsLeft = m_timesteps - timestep;
-            double expectedTimeLeft = timestepsLeft*timePerTimestep;
-
-            qDebug() << "Timestep " << timestep << " of " << m_timesteps << ". Time per timestep: " << timePerTimestep*1000 << " ms and expected time remaining: " << expectedTimeLeft << " s.";
-        }
+        tick();
     }
 
     qDebug() << "Simulation finished after " << timer.elapsed() / 1000.  << " seconds.";

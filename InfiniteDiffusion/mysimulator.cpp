@@ -1,4 +1,5 @@
 #include "mysimulator.h"
+#include "nogui.h"
 #include <QDebug>
 #include <SimVis/Points>
 
@@ -20,6 +21,16 @@ int MySimulator::time() const
 float MySimulator::timePerTimestep() const
 {
     return m_timePerTimestep;
+}
+
+Octree *MySimulator::octree() const
+{
+    return m_octree;
+}
+
+NoGUI *MySimulator::noGUI() const
+{
+    return m_noGUI;
 }
 
 void MySimulator::setSystem(System *system)
@@ -49,6 +60,23 @@ void MySimulator::setTimePerTimestep(float timePerTimestep)
     emit timePerTimestepChanged(timePerTimestep);
 }
 
+void MySimulator::setOctree(Octree *octree)
+{
+    if (m_octree == octree)
+        return;
+
+    m_octree = octree;
+    emit octreeChanged(octree);
+}
+
+void MySimulator::setNoGUI(NoGUI *noGUI)
+{
+    if (m_noGUI == noGUI)
+        return;
+
+    m_noGUI = noGUI;
+}
+
 SimulatorWorker *MySimulator::createWorker()
 {
     return new MyWorker();
@@ -67,6 +95,7 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
         // This is for instance data from user through GUI (sliders, buttons, text fields etc)
         m_system = mySimulator->system();
         m_octree = mySimulator->octree();
+        m_noGUI = mySimulator->noGUI();
         mySimulator->setTime(m_system->time());
         if(m_system->time()>0) {
             mySimulator->setTimePerTimestep(m_totalWorkTime / m_system->time());
@@ -77,10 +106,12 @@ void MyWorker::synchronizeSimulator(Simulator *simulator)
 void MyWorker::synchronizeRenderer(Renderable *renderableObject)
 {
     Points *points = qobject_cast<Points*>(renderableObject);
+    float deltaPos = (m_system->properties()->posMax() - m_system->properties()->posMin()) + m_system->properties()->posMin();
+    QVector3D systemCenter(0.5*deltaPos,0.5*deltaPos,0.5*deltaPos);
+
     if(points) {
-        QVector<QVector3D> positions = m_system->particlePositionsUnwrapped();
-        float deltaPos = (m_system->properties()->posMax() - m_system->properties()->posMin()) + m_system->properties()->posMin();
-        QVector3D systemCenter(0.5*deltaPos,0.5*deltaPos,0.5*deltaPos);
+        // QVector<QVector3D> positions = m_system->particlePositionsUnwrapped();
+        QVector<QVector3D> positions = m_system->particlePositions();
 
         for(QVector3D &position : positions) {
             position -= systemCenter;
@@ -92,6 +123,9 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
     if(triangleCollection && m_octree->m_vboDirty) {
        // qDebug() << "TRIANGLE COLLECTION :" << m_octree->vboData().size() ;
         triangleCollection->data = m_octree->vboData();
+        for(SimVis::TriangleCollectionVBOData &p : triangleCollection->data) {
+            p.vertex -= systemCenter;
+        }
         triangleCollection->dirty = true;
         m_octree->m_vboDirty = false;
      }
@@ -101,7 +135,15 @@ void MyWorker::work()
 {
     if(!m_system) return;
     m_elapsedTimer.restart();
-    bool didTick = m_system->tick();
+    bool didTick;
+    if(m_noGUI) {
+        didTick = m_noGUI->tick();
+        if(m_noGUI->finished) {
+            exit(0);
+        }
+    } else {
+        didTick = m_system->tick();
+    }
     if(didTick) {
         m_totalWorkTime += m_elapsedTimer.elapsed();
     }

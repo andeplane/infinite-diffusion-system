@@ -5,7 +5,6 @@
 #include <QVector>
 #include <QVector3D>
 #include <QElapsedTimer>
-
 class MyWorker : public SimulatorWorker
 {
     Q_OBJECT
@@ -14,6 +13,7 @@ private:
     System *m_system = nullptr;
     QVector<QPointF> m_histogram;
     Octree* m_octree = nullptr;
+    class NoGUI* m_noGUI = nullptr;
     float m_diffusionMean = 0;
     float m_diffusionStandardDeviation = 0;
     double m_totalWorkTime = 0;
@@ -39,39 +39,28 @@ private:
     System* m_system = nullptr;
     int m_time = 0;
     float m_timePerTimestep = 0;
-
     Octree* m_octree = nullptr;
+    class NoGUI* m_noGUI = nullptr;
 
 public:
     MySimulator();
     System* system() const;
     int time() const;
     float timePerTimestep() const;
-
-    Octree* octree() const
-    {
-        return m_octree;
-    }
+    Octree* octree() const;
+    class NoGUI* noGUI() const;
 
 public slots:
     void setSystem(System* system);
     void setTime(int time);
     void setTimePerTimestep(float timePerTimestep);
-
-    void setOctree(Octree* octree)
-    {
-        if (m_octree == octree)
-            return;
-
-        m_octree = octree;
-        emit octreeChanged(octree);
-    }
+    void setOctree(Octree* octree);
+    void setNoGUI(class NoGUI* noGUI);
 
 signals:
     void systemChanged(System* system);
     void timeChanged(int time);
     void timePerTimestepChanged(float timePerTimestep);
-
     void octreeChanged(Octree* octree);
 
 protected:

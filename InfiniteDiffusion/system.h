@@ -18,15 +18,17 @@ class SystemProperties : public QObject
     Q_PROPERTY(int posMin READ posMin WRITE setPosMin NOTIFY posMinChanged)
     Q_PROPERTY(int posMax READ posMax WRITE setPosMax NOTIFY posMaxChanged)
     Q_PROPERTY(bool periodic READ periodic WRITE setPeriodic NOTIFY periodicChanged)
+    Q_PROPERTY(bool mirrored READ mirrored WRITE setMirrored NOTIFY mirroredChanged)
 private:
     Model* m_model = nullptr;
     float m_stepLength = 0.0;
     bool m_willReset = false;
     int m_numberOfParticles = 100000;
-    int m_posMin = -100;
+    int m_posMin = 0;
     int m_posMax = 100;
     float m_dt = 1;
-    bool m_periodic = true;
+    bool m_periodic = false;
+    bool m_mirrored = false;
 
 public:
     ~SystemProperties();
@@ -37,6 +39,8 @@ public:
     int posMax() const;
     float dt() const;
     Model* model() const;
+    bool periodic() const;
+    bool mirrored() const;
 
 public slots:
     void setStepLength(float stepLength);
@@ -46,8 +50,8 @@ public slots:
     void setPosMax(int posMax);
     void setDt(float dt);
     void setModel(Model* model);
-
     void setPeriodic(bool periodic);
+    void setMirrored(bool mirrored);
 
 signals:
     void stepLengthChanged(float stepLength);
@@ -58,10 +62,10 @@ signals:
     void dtChanged(float dt);
     void modelChanged(Model* model);
     void periodicChanged(bool periodic);
+    void mirroredChanged(bool mirrored);
 
 public:
-friend class System;
-bool periodic() const;
+    friend class System;
 };
 
 class System : public QObject
@@ -76,7 +80,7 @@ private:
     float m_time = 0;
     QVariantList m_statistics;
     void applyPeriodic(QVector3D &position);
-
+    QVector3D mirroredPosition(QVector3D position);
 public:
     System();
     ~System();
@@ -87,6 +91,7 @@ public:
     QVector<Particle> &particles() { return m_particles; }
     SystemProperties* properties() const;
     QVector<QVector3D> particlePositionsUnwrapped();
+    QVector<QVector3D> particlePositions();
     float time() const;
     QVariantList &statistics();
 
