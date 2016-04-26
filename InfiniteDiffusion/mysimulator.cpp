@@ -2,6 +2,7 @@
 #include "nogui.h"
 #include <QDebug>
 #include <SimVis/Points>
+#include <SimVis/Spheres>
 
 MySimulator::MySimulator()
 {
@@ -119,8 +120,7 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         points->setPositions(positions);
     }
     TriangleCollection* triangleCollection = qobject_cast<TriangleCollection*>(renderableObject);
-    if (m_octree!=nullptr)
-    if(triangleCollection && m_octree->m_vboDirty) {
+    if(m_octree!=nullptr && triangleCollection && m_octree->m_vboDirty) {
        // qDebug() << "TRIANGLE COLLECTION :" << m_octree->vboData().size() ;
         triangleCollection->data = m_octree->vboData();
         for(SimVis::TriangleCollectionVBOData &p : triangleCollection->data) {
@@ -129,6 +129,20 @@ void MyWorker::synchronizeRenderer(Renderable *renderableObject)
         triangleCollection->dirty = true;
         m_octree->m_vboDirty = false;
      }
+
+    Spheres *spheres = qobject_cast<Spheres*>(renderableObject);
+    if(spheres) {
+
+        QVector<QVector3D> positions = m_system->particlePositions();
+        for(QVector3D &position : positions) {
+            position -= systemCenter;
+        }
+        spheres->positions() = positions;
+        spheres->setDirty(true);
+        return;
+    }
+
+
 }
 
 void MyWorker::work()
